@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flying Mangoes — Farm to Your Door</title>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --mango: #F5820A; --mango-light: #FFF3E0; --mango-dark: #C45E00;
+    --leaf: #2D5016; --leaf-light: #4A7C23; --cream: #FDF6EC;
+    --soil: #5C3D1E; --text: #1A1108; --text-muted: #6B5740;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 3rem; background: rgba(253,246,236,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(245,130,10,0.15); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo-text { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--mango-dark); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-size: 0.85rem; font-weight: 500; text-decoration: none; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--mango); }
+  .nav-cta { background: var(--mango); color: white !important; padding: 0.5rem 1.25rem; border-radius: 2rem; transition: background 0.2s !important; }
+  .nav-cta:hover { background: var(--mango-dark) !important; }
+
+  .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 8rem 3rem 4rem; gap: 4rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; right: -10%; top: -5%; width: 65%; height: 110%; background: radial-gradient(ellipse at center, #FAECD0 0%, transparent 70%); z-index: 0; }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--leaf); color: #C8E6A0; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.4rem 0.9rem; border-radius: 2rem; margin-bottom: 1.5rem; }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; background: #7DC842; border-radius: 50%; }
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 5vw, 4.5rem); font-weight: 700; line-height: 1.05; margin-bottom: 1.5rem; }
+  h1 em { font-style: italic; color: var(--mango); }
+  .hero-subtitle { font-size: 1.1rem; color: var(--text-muted); line-height: 1.7; max-width: 480px; margin-bottom: 2.5rem; font-weight: 300; }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary { background: var(--mango); color: white; border: none; padding: 0.9rem 2rem; border-radius: 3rem; font-size: 0.95rem; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
+  .btn-primary:hover { background: var(--mango-dark); transform: translateY(-1px); }
+  .btn-secondary { background: transparent; color: var(--text); border: 1.5px solid rgba(92,61,30,0.3); padding: 0.9rem 2rem; border-radius: 3rem; font-size: 0.95rem; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
+  .btn-secondary:hover { border-color: var(--mango); color: var(--mango); }
+  .hero-trust { margin-top: 2.5rem; display: flex; align-items: center; gap: 1.5rem; color: var(--text-muted); font-size: 0.85rem; flex-wrap: wrap; }
+  .trust-item { display: flex; align-items: center; gap: 6px; }
+  .trust-dot { width: 5px; height: 5px; background: var(--mango); border-radius: 50%; }
+  .hero-visual { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; }
+  .mango-illustration { width: 100%; max-width: 420px; filter: drop-shadow(0 20px 40px rgba(245,130,10,0.2)); }
+  .floating-tags { position: absolute; width: 100%; height: 100%; pointer-events: none; }
+  .tag { position: absolute; background: white; border-radius: 0.75rem; padding: 0.6rem 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); font-size: 0.8rem; font-weight: 500; white-space: nowrap; animation: float 4s ease-in-out infinite; }
+  .tag-1 { top: 15%; right: 5%; animation-delay: 0s; color: var(--leaf); }
+  .tag-2 { bottom: 20%; left: 0%; animation-delay: 1.5s; color: var(--mango-dark); }
+  .tag-3 { top: 60%; right: -2%; animation-delay: 0.8s; color: var(--soil); }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  section { padding: 5rem 3rem; }
+  .section-label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mango); margin-bottom: 0.75rem; }
+  h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 700; line-height: 1.2; color: var(--text); margin-bottom: 1rem; }
+
+  .story-section { background: var(--leaf); color: white; position: relative; overflow: hidden; }
+  .story-section::before { content: '"'; position: absolute; font-family: 'Playfair Display', serif; font-size: 20rem; color: rgba(255,255,255,0.04); top: -3rem; left: 1rem; line-height: 1; }
+  .story-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; align-items: center; }
+  .story-year { font-family: 'Playfair Display', serif; font-size: 5rem; font-weight: 700; color: var(--mango); line-height: 1; margin-bottom: 0.5rem; }
+  .story-since { font-size: 0.85rem; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; text-transform: uppercase; }
+  .story-text h2 { color: white; margin-bottom: 1.5rem; }
+  .story-text p { color: rgba(255,255,255,0.75); line-height: 1.8; font-size: 1.05rem; margin-bottom: 1rem; font-weight: 300; }
+  .story-text p strong { color: rgba(255,255,255,0.95); font-weight: 500; }
+
+  .products-section { background: white; }
+  .products-header { text-align: center; max-width: 560px; margin: 0 auto 3.5rem; }
+  .products-header p { color: var(--text-muted); line-height: 1.7; }
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
+  .product-card { border-radius: 1.25rem; overflow: hidden; border: 1px solid rgba(245,130,10,0.12); transition: transform 0.2s, box-shadow 0.2s; }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(245,130,10,0.15); }
+  .product-img { height: 180px; display: flex; align-items: center; justify-content: center; font-size: 5rem; position: relative; }
+  .product-img-1 { background: linear-gradient(135deg,#FFF3E0,#FFE0B2); }
+  .product-img-2 { background: linear-gradient(135deg,#F1F8E9,#DCEDC8); }
+  .product-img-3 { background: linear-gradient(135deg,#FFF8E1,#FFECB3); }
+  .product-img-4 { background: linear-gradient(135deg,#FBE9E7,#FFCCBC); }
+  .product-badge { position: absolute; top: 1rem; right: 1rem; background: var(--leaf); color: #C8E6A0; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.6rem; border-radius: 2rem; }
+  .product-info { padding: 1.25rem 1.5rem 1.5rem; background: white; }
+  .product-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+  .product-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-size: 1.1rem; font-weight: 500; color: var(--mango-dark); }
+  .product-price span { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
+
+  /* PAY BUTTON */
+  .pay-btn {
+    background: var(--mango); color: white; border: none; padding: 0.55rem 1.1rem;
+    border-radius: 2rem; font-size: 0.82rem; font-weight: 500; cursor: pointer;
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .pay-btn:hover { background: var(--mango-dark); transform: translateY(-1px); }
+  .pay-btn:disabled { background: #CCC; cursor: not-allowed; transform: none; }
+  .pay-btn .upi-icon { font-size: 0.9rem; }
+
+  .values-section { background: var(--cream); }
+  .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-top: 3rem; }
+  .value-card { text-align: center; padding: 2rem 1.5rem; }
+  .value-icon { width: 56px; height: 56px; background: var(--mango-light); border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 1.25rem; }
+  .value-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+  .value-text { font-size: 0.875rem; color: var(--text-muted); line-height: 1.7; }
+
+  .order-section { background: var(--mango); text-align: center; padding: 5rem 3rem; position: relative; overflow: hidden; }
+  .order-section::before { content: '🥭'; position: absolute; font-size: 15rem; opacity: 0.07; top: -2rem; left: -2rem; transform: rotate(-15deg); }
+  .order-section::after { content: '🥭'; position: absolute; font-size: 12rem; opacity: 0.07; bottom: -2rem; right: -1rem; transform: rotate(20deg); }
+  .order-inner { position: relative; z-index: 1; }
+  .order-section h2 { color: white; font-size: clamp(2rem,4vw,3rem); margin-bottom: 1rem; }
+  .order-section p { color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 2.5rem; font-weight: 300; }
+  .order-form { display: flex; max-width: 440px; margin: 0 auto; background: white; border-radius: 3rem; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.15); }
+  .order-input { flex: 1; border: none; outline: none; padding: 1rem 1.5rem; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; color: var(--text); background: transparent; }
+  .order-input::placeholder { color: #AAA; }
+  .order-btn { background: var(--mango-dark); color: white; border: none; padding: 1rem 1.75rem; font-size: 0.9rem; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; border-radius: 3rem; transition: background 0.2s; white-space: nowrap; }
+  .order-btn:hover { background: var(--soil); }
+
+  .stats-bar { background: var(--soil); padding: 2rem 3rem; display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap; }
+  .stat { text-align: center; color: white; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--mango); }
+  .stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.25rem; }
+
+  footer { background: var(--text); color: rgba(255,255,255,0.6); padding: 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .footer-brand { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: white; font-weight: 700; }
+  .footer-tagline { font-size: 0.8rem; margin-top: 0.3rem; color: rgba(255,255,255,0.4); font-style: italic; }
+  .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+  .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--mango); }
+  .footer-copy { font-size: 0.75rem; width: 100%; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; margin-top: 0.5rem; color: rgba(255,255,255,0.3); }
+
+  /* PAYMENT SUCCESS MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .modal-overlay.show { opacity: 1; pointer-events: all; }
+  .modal { background: white; border-radius: 1.5rem; padding: 2.5rem; max-width: 420px; width: 100%; text-align: center; transform: scale(0.9); transition: transform 0.3s; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+  .modal-overlay.show .modal { transform: scale(1); }
+  .modal-icon { font-size: 4rem; margin-bottom: 1rem; display: block; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+  .modal-sub { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.75rem; }
+  .modal-pid { background: var(--mango-light); border-radius: 0.5rem; padding: 0.5rem 1rem; font-size: 0.78rem; color: var(--mango-dark); font-weight: 500; margin-bottom: 1.5rem; display: inline-block; }
+  .modal-wa-btn { background: #25D366; color: white; border: none; padding: 0.85rem 1.75rem; border-radius: 3rem; font-size: 0.95rem; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 0.75rem; width: 100%; justify-content: center; }
+  .modal-wa-btn:hover { background: #1EBE57; }
+  .modal-close { background: transparent; border: 1.5px solid rgba(92,61,30,0.2); color: var(--text-muted); padding: 0.7rem 1.5rem; border-radius: 3rem; font-size: 0.85rem; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; width: 100%; }
+  .modal-close:hover { border-color: var(--mango); color: var(--mango); }
+
+  /* PHONE MODAL */
+  .phone-modal { background: white; border-radius: 1.5rem; padding: 2rem; max-width: 380px; width: 100%; transform: scale(0.9); transition: transform 0.3s; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+  .modal-overlay.show .phone-modal { transform: scale(1); }
+  .phone-modal h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .phone-modal p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.5; }
+  .phone-input-row { display: flex; gap: 0; background: #F5F0E8; border-radius: 0.75rem; overflow: hidden; margin-bottom: 1rem; border: 1.5px solid var(--border, rgba(92,61,30,0.15)); }
+  .phone-prefix { padding: 0.75rem 0.9rem; font-size: 0.9rem; color: var(--text-muted); background: transparent; font-weight: 500; }
+  .phone-field { flex: 1; border: none; outline: none; padding: 0.75rem 0.5rem; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; background: transparent; color: var(--text); }
+  .proceed-btn { background: var(--mango); color: white; border: none; padding: 0.85rem; border-radius: 0.75rem; font-size: 0.95rem; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; width: 100%; transition: background 0.2s; }
+  .proceed-btn:hover { background: var(--mango-dark); }
+  .proceed-btn:disabled { background: #CCC; cursor: not-allowed; }
+
+  .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--leaf); color: white; padding: 0.75rem 1.5rem; border-radius: 2rem; font-size: 0.9rem; z-index: 999; transition: transform 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; } .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; gap: 2rem; }
+    .hero-visual { order: -1; } .mango-illustration { max-width: 280px; }
+    .story-inner { grid-template-columns: 1fr; gap: 2rem; }
+    section { padding: 3.5rem 1.5rem; } .stats-bar { gap: 2rem; padding: 1.5rem; } footer { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><ellipse cx="18" cy="22" rx="12" ry="9" fill="#F5820A"/><ellipse cx="18" cy="20" rx="10" ry="8" fill="#F9A825"/><path d="M18 14 C18 14 22 8 28 6 C24 10 20 12 18 14Z" fill="#2D5016"/><path d="M18 14 C18 14 14 8 8 7 C12 11 16 13 18 14Z" fill="#4A7C23"/><circle cx="18" cy="14" r="1.5" fill="#2D5016"/></svg>
+    <span class="nav-logo-text">Flying Mangoes</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#story">Our Story</a></li>
+    <li><a href="#mangoes">Shop</a></li>
+    <li><a href="#values">Why Us</a></li>
+    <li><a href="#mangoes" class="nav-cta">Order Now</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🌿 100% Organic · Farm Direct</div>
+    <h1>Mangoes that<br>have been <em>flying</em><br>since 1962.</h1>
+    <p class="hero-subtitle">Three generations of love, sunlight, and soil — delivered fresh from our farm to your table. No middlemen. No chemicals. Just the real taste of summer.</p>
+    <div class="hero-actions">
+      <a href="#mangoes" class="btn-primary">Order This Season →</a>
+      <a href="#story" class="btn-secondary">Our Story</a>
+    </div>
+    <div class="hero-trust">
+      <div class="trust-item"><div class="trust-dot"></div><span>Alphonso &amp; Kesar</span></div>
+      <div class="trust-item"><div class="trust-dot"></div><span>Ships in 24hrs</span></div>
+      <div class="trust-item"><div class="trust-dot"></div><span>1 Hectare, 0 Chemicals</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <svg class="mango-illustration" viewBox="0 0 420 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="210" cy="330" rx="120" ry="20" fill="#F5820A" opacity="0.12"/>
+      <ellipse cx="210" cy="340" rx="90" ry="12" fill="#C45E00" opacity="0.2"/>
+      <path d="M210 60 C240 60 290 90 310 150 C330 210 320 280 280 320 C260 340 240 350 210 350 C180 350 160 340 140 320 C100 280 90 210 110 150 C130 90 180 60 210 60Z" fill="#F9A825"/>
+      <path d="M180 90 C195 80 215 78 230 85 C220 100 195 108 180 90Z" fill="#FFD54F" opacity="0.6"/>
+      <path d="M270 130 C285 160 290 200 280 240 C270 280 250 310 230 325 C255 300 270 260 270 220 C272 190 268 155 270 130Z" fill="#C45E00" opacity="0.25"/>
+      <path d="M210 60 C210 40 215 20 225 10" stroke="#5C3D1E" stroke-width="4" stroke-linecap="round"/>
+      <path d="M225 10 C235 0 260 -5 270 5 C260 15 240 18 225 10Z" fill="#2D5016"/>
+      <path d="M225 10 C210 0 185 -8 178 5 C188 15 210 18 225 10Z" fill="#4A7C23"/>
+      <text x="210" y="220" text-anchor="middle" font-family="Georgia,serif" font-size="18" font-weight="700" fill="#7C3E00" opacity="0.85">Flying</text>
+      <text x="210" y="242" text-anchor="middle" font-family="Georgia,serif" font-size="18" font-weight="700" fill="#7C3E00" opacity="0.85">Mangoes</text>
+    </svg>
+    <div class="floating-tags">
+      <div class="tag tag-1">🌿 Zero Pesticides</div>
+      <div class="tag tag-2">🚜 Family Farm Since 1962</div>
+      <div class="tag tag-3">📦 Ships in 24hrs</div>
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num">3</div><div class="stat-label">Generations</div></div>
+  <div class="stat"><div class="stat-num">62+</div><div class="stat-label">Years of Farming</div></div>
+  <div class="stat"><div class="stat-num">1 ha</div><div class="stat-label">Organic Land</div></div>
+  <div class="stat"><div class="stat-num">0</div><div class="stat-label">Chemicals Used</div></div>
+</div>
+
+<section class="story-section" id="story">
+  <div class="story-inner">
+    <div class="story-meta">
+      <div class="story-year">1962</div>
+      <div class="story-since">EST. BY THATHA</div>
+    </div>
+    <div class="story-text">
+      <div class="section-label" style="color:#A5D6A7;">Our Roots</div>
+      <h2>A tree planted by a grandfather.<br>A promise kept by two friends.</h2>
+      <p>In 1962, our founder's grandfather — <strong>Thatha</strong> — planted his first mango sapling on a quiet one-hectare plot. He didn't do it for profit. He believed that a tree, like a family, grows better when you give it patience, love, and the right soil.</p>
+      <p>Sixty years later, those same trees stand tall. The farm has never once used a synthetic pesticide. The soil remembers every season. And the mangoes — they still taste exactly the way Thatha intended.</p>
+      <p><strong>Flying Mangoes is our way of honoring that legacy</strong> — the purest, most honest fruit from this family farm, directly to yours.</p>
+    </div>
+  </div>
+</section>
+
+<section class="products-section" id="mangoes">
+  <div class="products-header">
+    <div class="section-label">This Season's Harvest</div>
+    <h2>Fresh from the farm,<br>straight to your door.</h2>
+    <p>Hand-picked at peak ripeness. Packed with care. Every box carries three generations of knowing exactly when a mango is ready.</p>
+  </div>
+  <div class="products-grid">
+
+    <div class="product-card">
+      <div class="product-img product-img-1">🥭<div class="product-badge">Bestseller</div></div>
+      <div class="product-info">
+        <div class="product-name">The Classic Dozen</div>
+        <div class="product-desc">12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.</div>
+        <div class="product-footer">
+          <div class="product-price">₹699 <span>/ box</span></div>
+          <button class="pay-btn" onclick="startPayment('The Classic Dozen', 69900)"><span class="upi-icon">💳</span> Pay via UPI</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img product-img-2">🌿<div class="product-badge">New</div></div>
+      <div class="product-info">
+        <div class="product-name">The Family Box</div>
+        <div class="product-desc">24 mixed mangoes — Alphonso &amp; Kesar. For the family that eats together and argues over the best variety.</div>
+        <div class="product-footer">
+          <div class="product-price">₹1,199 <span>/ box</span></div>
+          <button class="pay-btn" onclick="startPayment('The Family Box', 119900)"><span class="upi-icon">💳</span> Pay via UPI</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img product-img-3">✨<div class="product-badge">Limited</div></div>
+      <div class="product-info">
+        <div class="product-name">Thatha's Reserve</div>
+        <div class="product-desc">6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.</div>
+        <div class="product-footer">
+          <div class="product-price">₹799 <span>/ box</span></div>
+          <button class="pay-btn" onclick="startPayment('Thatha\'s Reserve', 79900)"><span class="upi-icon">💳</span> Pay via UPI</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img product-img-4">🎁</div>
+      <div class="product-info">
+        <div class="product-name">Gift a Harvest</div>
+        <div class="product-desc">Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.</div>
+        <div class="product-footer">
+          <div class="product-price">₹899 <span>/ box</span></div>
+          <button class="pay-btn" onclick="startPayment('Gift a Harvest', 89900)"><span class="upi-icon">💳</span> Pay via UPI</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="values-section" id="values">
+  <div style="text-align:center;max-width:500px;margin:0 auto 0.5rem;">
+    <div class="section-label">Why Flying Mangoes</div>
+    <h2>The honest way to eat a mango.</h2>
+  </div>
+  <div class="values-grid">
+    <div class="value-card"><div class="value-icon">🌱</div><div class="value-title">Truly Organic</div><div class="value-text">Not certified by a committee — proven by 62 years of farming without a single chemical. The soil tells the truth.</div></div>
+    <div class="value-card"><div class="value-icon">🚀</div><div class="value-title">Farm to Door in 24hrs</div><div class="value-text">We pick when you order. Not the other way around. Your mango was on the tree yesterday.</div></div>
+    <div class="value-card"><div class="value-icon">🤝</div><div class="value-title">No Middlemen</div><div class="value-text">Direct from our family farm to you. More flavour for you. Fair price for us.</div></div>
+    <div class="value-card"><div class="value-icon">🌳</div><div class="value-title">A Living Legacy</div><div class="value-text">Every mango you buy helps keep this farm alive for the next generation.</div></div>
+  </div>
+</section>
+
+<section class="order-section" id="order">
+  <div class="order-inner">
+    <div class="section-label" style="color:rgba(255,255,255,0.6);">Limited Season Stock</div>
+    <h2>Don't miss this season's harvest.</h2>
+    <p>300–400 mangoes ready this weekend. Once they're gone, they're gone.</p>
+    <div class="order-form">
+      <input class="order-input" type="tel" placeholder="Enter your phone number" id="notify-phone"/>
+      <button class="order-btn" onclick="notifyMe()">Notify Me</button>
+    </div>
+    <p style="font-size:0.78rem;margin-top:1rem;color:rgba(255,255,255,0.5);">We'll WhatsApp you with the order link. No spam, ever.</p>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-brand">🥭 Flying Mangoes</div>
+    <div class="footer-tagline">Est. 1962 by Thatha. Grown with love ever since.</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#story">Our Story</a></li>
+    <li><a href="#mangoes">Shop</a></li>
+    <li><a href="#order">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 Flying Mangoes. All mangoes hand-picked with love. 1 hectare of honest farming.</div>
+</footer>
+
+<!-- PHONE COLLECTION MODAL -->
+<div class="modal-overlay" id="phone-modal-overlay">
+  <div class="phone-modal">
+    <div style="font-size:2rem;margin-bottom:0.75rem;">🥭</div>
+    <h3>Almost there!</h3>
+    <p id="phone-modal-product-line">Enter your phone number to proceed with payment. We'll send your order confirmation on WhatsApp.</p>
+    <div class="phone-input-row">
+      <span class="phone-prefix">+91</span>
+      <input class="phone-field" type="tel" id="customer-phone" placeholder="98765 43210" maxlength="10">
+    </div>
+    <button class="proceed-btn" id="proceed-btn" onclick="proceedToPayment()">Pay Now →</button>
+    <button onclick="closePhoneModal()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;margin-top:0.75rem;cursor:pointer;width:100%;">Cancel</button>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="success-modal">
+  <div class="modal">
+    <span class="modal-icon">🎉</span>
+    <div class="modal-title">Order Confirmed!</div>
+    <p class="modal-sub" id="success-product-text">Your mangoes are on their way from the farm.</p>
+    <div class="modal-pid" id="payment-id-display"></div>
+    <a class="modal-wa-btn" id="whatsapp-confirm-btn" href="#" target="_blank">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Confirm on WhatsApp
+    </a>
+    <button class="modal-close" onclick="closeSuccessModal()">Close</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let pendingProduct = null;
+  let pendingAmount = null;
+
+  function startPayment(productName, amountPaise) {
+    pendingProduct = productName;
+    pendingAmount = amountPaise;
+    document.getElementById('phone-modal-product-line').textContent =
+      `Ordering: ${productName} — ₹${(amountPaise/100).toLocaleString('en-IN')}. Enter your WhatsApp number for order confirmation.`;
+    document.getElementById('customer-phone').value = '';
+    document.getElementById('phone-modal-overlay').classList.add('show');
+    setTimeout(() => document.getElementById('customer-phone').focus(), 300);
+  }
+
+  function closePhoneModal() {
+    document.getElementById('phone-modal-overlay').classList.remove('show');
+    pendingProduct = null; pendingAmount = null;
+  }
+
+  async function proceedToPayment() {
+    const phone = document.getElementById('customer-phone').value.trim();
+    if (!phone || phone.length !== 10 || !/^\d+$/.test(phone)) {
+      showToast('Please enter a valid 10-digit phone number');
+      return;
+    }
+    const btn = document.getElementById('proceed-btn');
+    btn.disabled = true; btn.textContent = 'Creating order...';
+
+    try {
+      const res = await fetch('/api/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: pendingAmount, currency: 'INR', receipt: `receipt_${Date.now()}`, product_name: pendingProduct })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to create order');
+
+      closePhoneModal();
+      openRazorpay(data, pendingProduct, pendingAmount, '+91' + phone);
+    } catch (err) {
+      showToast('❌ ' + (err.message || 'Something went wrong'));
+    } finally {
+      btn.disabled = false; btn.textContent = 'Pay Now →';
+    }
+  }
+
+  function openRazorpay(orderData, productName, amountPaise, customerPhone) {
+    const options = {
+      key: orderData.key_id,
+      amount: orderData.amount,
+      currency: orderData.currency,
+      name: 'Flying Mangoes 🥭',
+      description: productName,
+      order_id: orderData.order_id,
+      prefill: { contact: customerPhone },
+      theme: { color: '#F5820A' },
+      modal: {
+        ondismiss: () => showToast('Payment cancelled. You can try again anytime.')
+      },
+      handler: async function(response) {
+        showToast('✅ Payment received! Verifying...');
+        await verifyPayment(response, productName, amountPaise, customerPhone);
+      }
+    };
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function(resp) {
+      showToast('❌ Payment failed: ' + (resp.error.description || 'Please try again'));
+    });
+    rzp.open();
+  }
+
+  async function verifyPayment(response, productName, amountPaise, customerPhone) {
+    try {
+      const res = await fetch('/api/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+          product_name: productName,
+          amount: amountPaise,
+          customer_phone: customerPhone
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      document.getElementById('success-product-text').textContent =
+        `${productName} — ₹${(amountPaise/100).toLocaleString('en-IN')}. We'll deliver within 24 hours.`;
+      document.getElementById('payment-id-display').textContent = 'Payment ID: ' + response.razorpay_payment_id;
+      document.getElementById('whatsapp-confirm-btn').href = data.whatsapp_url;
+      document.getElementById('success-modal').classList.add('show');
+    } catch (err) {
+      showToast('Payment done but verification failed. Screenshot your payment ID: ' + response.razorpay_payment_id);
+    }
+  }
+
+  function closeSuccessModal() {
+    document.getElementById('success-modal').classList.remove('show');
+  }
+
+  function notifyMe() {
+    const phone = document.getElementById('notify-phone').value.trim();
+    if (!phone || phone.length < 10) { showToast('Please enter a valid phone number'); return; }
+    document.getElementById('notify-phone').value = '';
+    showToast('🥭 Added! We\'ll WhatsApp you shortly.');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+
+  // Close modals on overlay click
+  document.getElementById('phone-modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closePhoneModal();
+  });
+  document.getElementById('success-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeSuccessModal();
+  });
+
+  // Enter key on phone field
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('customer-phone').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') proceedToPayment();
+    });
+  });
+</script>
+</body>
+</html>

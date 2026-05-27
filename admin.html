@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flying Mangoes — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --mango: #F5820A; --mango-light: #FFF3E0; --mango-dark: #C45E00;
+  --leaf: #2D5016; --cream: #FDF6EC; --soil: #5C3D1E;
+  --text: #1A1108; --text-muted: #6B5740;
+  --border: rgba(92,61,30,0.15);
+  --sidebar-w: 240px;
+}
+body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--text); display: flex; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar {
+  width: var(--sidebar-w); background: var(--soil); color: white;
+  display: flex; flex-direction: column; padding: 0; position: fixed;
+  top: 0; left: 0; bottom: 0; z-index: 50;
+}
+.sidebar-logo {
+  padding: 1.5rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; gap: 10px;
+}
+.sidebar-logo-text { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--mango); }
+.sidebar-logo-sub { font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-top: 1px; }
+.sidebar-nav { flex: 1; padding: 1rem 0; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0.7rem 1.25rem; font-size: 0.875rem; font-weight: 400;
+  color: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.15s;
+  border-left: 3px solid transparent;
+}
+.nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
+.nav-item.active { color: var(--mango); background: rgba(245,130,10,0.1); border-left-color: var(--mango); }
+.nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+.sidebar-footer {
+  padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.75rem; color: rgba(255,255,255,0.3);
+}
+.view-site-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(245,130,10,0.15); color: var(--mango);
+  padding: 0.6rem 1rem; border-radius: 0.5rem; font-size: 0.8rem;
+  font-weight: 500; text-decoration: none; margin-bottom: 0.75rem;
+  transition: background 0.2s;
+}
+.view-site-btn:hover { background: rgba(245,130,10,0.25); }
+
+/* MAIN */
+.main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+.topbar {
+  background: white; padding: 1rem 2rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 40;
+}
+.topbar-title { font-size: 1rem; font-weight: 500; }
+.topbar-title span { color: var(--text-muted); font-weight: 400; font-size: 0.85rem; }
+.save-btn {
+  background: var(--mango); color: white; border: none; padding: 0.55rem 1.25rem;
+  border-radius: 2rem; font-size: 0.85rem; font-weight: 500; font-family: 'DM Sans', sans-serif;
+  cursor: pointer; transition: background 0.2s;
+}
+.save-btn:hover { background: var(--mango-dark); }
+.save-btn:disabled { background: #CCC; cursor: not-allowed; }
+
+.content { padding: 2rem; flex: 1; }
+
+/* PANELS */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* SECTION CARD */
+.edit-card {
+  background: white; border-radius: 1rem; padding: 1.5rem 2rem;
+  border: 1px solid var(--border); margin-bottom: 1.5rem;
+}
+.edit-card-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);
+}
+.edit-card-icon { font-size: 1.1rem; }
+.edit-card-title { font-size: 0.9rem; font-weight: 500; }
+.edit-card-desc { font-size: 0.78rem; color: var(--text-muted); margin-left: auto; }
+
+.field-group { margin-bottom: 1.25rem; }
+.field-label { font-size: 0.78rem; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem; display: block; }
+.field-input {
+  width: 100%; padding: 0.65rem 0.9rem; border: 1px solid var(--border);
+  border-radius: 0.5rem; font-size: 0.9rem; font-family: 'DM Sans', sans-serif;
+  color: var(--text); background: #FAFAFA; outline: none; transition: border-color 0.2s;
+}
+.field-input:focus { border-color: var(--mango); background: white; }
+.field-textarea {
+  width: 100%; padding: 0.65rem 0.9rem; border: 1px solid var(--border);
+  border-radius: 0.5rem; font-size: 0.9rem; font-family: 'DM Sans', sans-serif;
+  color: var(--text); background: #FAFAFA; outline: none; resize: vertical;
+  min-height: 90px; line-height: 1.6; transition: border-color 0.2s;
+}
+.field-textarea:focus { border-color: var(--mango); background: white; }
+
+/* PRODUCT GRID */
+.products-edit-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+.product-edit-card {
+  background: white; border-radius: 1rem; border: 1px solid var(--border);
+  overflow: hidden; transition: box-shadow 0.2s;
+}
+.product-edit-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+/* IMAGE UPLOAD */
+.img-upload-zone {
+  position: relative; height: 160px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; cursor: pointer;
+  transition: all 0.2s; overflow: hidden;
+}
+.img-upload-zone.has-image { background: #F0F0F0; }
+.img-upload-zone:not(.has-image) {
+  background: var(--mango-light);
+  border-bottom: 2px dashed rgba(245,130,10,0.4);
+}
+.img-upload-zone:hover { opacity: 0.85; }
+.img-upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.upload-preview { width: 100%; height: 100%; object-fit: cover; display: none; }
+.upload-preview.visible { display: block; }
+.upload-placeholder { text-align: center; pointer-events: none; }
+.upload-placeholder .upload-icon { font-size: 2rem; display: block; margin-bottom: 0.4rem; }
+.upload-placeholder .upload-text { font-size: 0.78rem; color: var(--mango-dark); font-weight: 500; }
+.upload-placeholder .upload-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+.upload-overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.5);
+  display: none; align-items: center; justify-content: center;
+  color: white; font-size: 0.8rem; font-weight: 500; gap: 6px;
+}
+.img-upload-zone.has-image:hover .upload-overlay { display: flex; }
+
+.product-edit-body { padding: 1.25rem; }
+.product-badge-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
+.badge-select {
+  font-size: 0.7rem; font-weight: 500; padding: 0.2rem 0.6rem;
+  border-radius: 2rem; border: 1px solid var(--border);
+  background: #FAFAFA; color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+  cursor: pointer; outline: none;
+}
+
+/* STORY SECTION */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.hero-preview {
+  background: linear-gradient(135deg, #FDF6EC 0%, #FAECD0 100%);
+  border-radius: 0.75rem; padding: 1.5rem; border: 1px dashed rgba(245,130,10,0.3);
+}
+.preview-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mango); margin-bottom: 0.75rem; font-weight: 500; }
+.preview-h1 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.2; color: var(--text); margin-bottom: 0.5rem; }
+.preview-h1 em { font-style: italic; color: var(--mango); }
+.preview-p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+
+/* GENERAL SETTINGS */
+.settings-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.color-field { display: flex; align-items: center; gap: 8px; }
+.color-swatch { width: 32px; height: 32px; border-radius: 0.4rem; border: 1px solid var(--border); cursor: pointer; padding: 2px; }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 2rem; right: 2rem;
+  background: var(--leaf); color: white; padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem; font-size: 0.875rem; z-index: 999;
+  transform: translateY(100px); opacity: 0; transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* STATS ROW */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+.stat-card {
+  background: white; border-radius: 0.75rem; padding: 1.25rem;
+  border: 1px solid var(--border); text-align: center;
+}
+.stat-card .num { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--mango); }
+.stat-card .lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+/* CHANGELOG */
+.change-log { max-height: 300px; overflow-y: auto; }
+.log-item {
+  display: flex; align-items: flex-start; gap: 10px; padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border); font-size: 0.82rem;
+}
+.log-item:last-child { border-bottom: none; }
+.log-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--mango); margin-top: 4px; flex-shrink: 0; }
+.log-text { color: var(--text); }
+.log-time { color: var(--text-muted); font-size: 0.75rem; margin-top: 2px; }
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .two-col, .settings-row, .stats-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <svg width="28" height="28" viewBox="0 0 36 36" fill="none"><ellipse cx="18" cy="22" rx="12" ry="9" fill="#F5820A"/><ellipse cx="18" cy="20" rx="10" ry="8" fill="#F9A825"/><path d="M18 14 C18 14 22 8 28 6 C24 10 20 12 18 14Z" fill="#2D5016"/><path d="M18 14 C18 14 14 8 8 7 C12 11 16 13 18 14Z" fill="#4A7C23"/><circle cx="18" cy="14" r="1.5" fill="#2D5016"/></svg>
+    <div>
+      <div class="sidebar-logo-text">Flying Mangoes</div>
+      <span class="sidebar-logo-sub">Admin Panel</span>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" onclick="showPanel('dashboard')" id="nav-dashboard">
+      <span class="nav-icon">📊</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPanel('hero')" id="nav-hero">
+      <span class="nav-icon">🏠</span> Hero Section
+    </div>
+    <div class="nav-item" onclick="showPanel('story')" id="nav-story">
+      <span class="nav-icon">📖</span> Our Story
+    </div>
+    <div class="nav-item" onclick="showPanel('products')" id="nav-products">
+      <span class="nav-icon">🥭</span> Products
+    </div>
+    <div class="nav-item" onclick="showPanel('values')" id="nav-values">
+      <span class="nav-icon">✨</span> Why Us Section
+    </div>
+    <div class="nav-item" onclick="showPanel('settings')" id="nav-settings">
+      <span class="nav-icon">⚙️</span> Settings
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <a class="view-site-btn" href="index.html" target="_blank">🌐 View Live Site ↗</a>
+    <div>Last saved: Just now</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">Dashboard <span>— Overview</span></div>
+    <button class="save-btn" onclick="saveAll()" id="save-btn">💾 Save Changes</button>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="stats-row">
+        <div class="stat-card"><div class="num">4</div><div class="lbl">Products Listed</div></div>
+        <div class="stat-card"><div class="num">300</div><div class="lbl">Mangoes This Season</div></div>
+        <div class="stat-card"><div class="num">1 ha</div><div class="lbl">Farm Size</div></div>
+        <div class="stat-card"><div class="num" id="changes-count">0</div><div class="lbl">Unsaved Changes</div></div>
+      </div>
+      <div class="edit-card">
+        <div class="edit-card-header">
+          <span class="edit-card-icon">🕐</span>
+          <span class="edit-card-title">Recent Changes</span>
+        </div>
+        <div class="change-log" id="change-log">
+          <div style="color: var(--text-muted); font-size: 0.85rem; padding: 1rem 0;">No changes yet. Start editing your site!</div>
+        </div>
+      </div>
+      <div class="edit-card">
+        <div class="edit-card-header">
+          <span class="edit-card-icon">🚀</span>
+          <span class="edit-card-title">Quick Actions</span>
+        </div>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <button class="save-btn" onclick="showPanel('hero')" style="background: var(--leaf);">✏️ Edit Hero</button>
+          <button class="save-btn" onclick="showPanel('products')" style="background: var(--soil);">🥭 Edit Products</button>
+          <button class="save-btn" onclick="showPanel('story')">📖 Edit Story</button>
+          <a href="index.html" target="_blank" class="save-btn" style="background: #444; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">🌐 View Site</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <div class="panel" id="panel-hero">
+      <div class="two-col" style="margin-bottom: 1.5rem;">
+        <div>
+          <div class="edit-card">
+            <div class="edit-card-header">
+              <span class="edit-card-icon">✏️</span>
+              <span class="edit-card-title">Hero Text</span>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Badge Text</label>
+              <input class="field-input" id="hero-badge" value="🌿 100% Organic · Farm Direct" oninput="markChange('Hero badge text')">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Headline Line 1</label>
+              <input class="field-input" id="hero-h1-1" value="Mangoes that" oninput="updateHeroPreview(); markChange('Hero headline')">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Headline Line 2 (italic/orange)</label>
+              <input class="field-input" id="hero-h1-2" value="have been flying" oninput="updateHeroPreview(); markChange('Hero headline')">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Headline Line 3</label>
+              <input class="field-input" id="hero-h1-3" value="since 1962." oninput="updateHeroPreview(); markChange('Hero headline')">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Subtitle / Description</label>
+              <textarea class="field-textarea" id="hero-subtitle" oninput="updateHeroPreview(); markChange('Hero subtitle')">Three generations of love, sunlight, and soil — delivered fresh from our farm to your table. No middlemen. No chemicals. Just the real taste of summer.</textarea>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Primary Button Text</label>
+              <input class="field-input" id="hero-btn1" value="Order This Season →" oninput="markChange('Hero button text')">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Secondary Button Text</label>
+              <input class="field-input" id="hero-btn2" value="Our Story" oninput="markChange('Hero button text')">
+            </div>
+          </div>
+          <div class="edit-card">
+            <div class="edit-card-header">
+              <span class="edit-card-icon">🏷️</span>
+              <span class="edit-card-title">Trust Tags (floating labels)</span>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Tag 1</label>
+              <input class="field-input" id="tag1" value="🌿 Zero Pesticides" oninput="markChange('Floating tags')">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Tag 2</label>
+              <input class="field-input" id="tag2" value="🚜 Family Farm Since 1962" oninput="markChange('Floating tags')">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Tag 3</label>
+              <input class="field-input" id="tag3" value="📦 Ships in 24hrs" oninput="markChange('Floating tags')">
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="edit-card" style="position: sticky; top: 5rem;">
+            <div class="edit-card-header">
+              <span class="edit-card-icon">👁️</span>
+              <span class="edit-card-title">Live Preview</span>
+              <span class="edit-card-desc">Updates as you type</span>
+            </div>
+            <div class="hero-preview">
+              <div class="preview-label">Hero Section</div>
+              <div class="preview-h1" id="preview-h1">
+                Mangoes that<br><em>have been flying</em><br>since 1962.
+              </div>
+              <p class="preview-p" id="preview-sub" style="margin-top: 0.75rem;">Three generations of love, sunlight, and soil — delivered fresh from our farm to your table.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STORY SECTION -->
+    <div class="panel" id="panel-story">
+      <div class="edit-card">
+        <div class="edit-card-header">
+          <span class="edit-card-icon">📖</span>
+          <span class="edit-card-title">Brand Story</span>
+          <span class="edit-card-desc">The dark green section on your site</span>
+        </div>
+        <div class="settings-row">
+          <div class="field-group">
+            <label class="field-label">Year Founded (large number)</label>
+            <input class="field-input" id="story-year" value="1962" oninput="markChange('Story year')">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Founder Label</label>
+            <input class="field-input" id="story-since" value="EST. BY THATHA" oninput="markChange('Story founder label')">
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Story Headline</label>
+          <input class="field-input" id="story-h2" value="A tree planted by a grandfather. A promise kept by two friends." oninput="markChange('Story headline')">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Paragraph 1</label>
+          <textarea class="field-textarea" id="story-p1" oninput="markChange('Story paragraph 1')">In 1962, our founder's grandfather — Thatha — planted his first mango sapling on a quiet one-hectare plot. He didn't do it for profit. He did it because he believed that a tree, like a family, grows better when you give it patience, love, and the right soil.</textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Paragraph 2</label>
+          <textarea class="field-textarea" id="story-p2" oninput="markChange('Story paragraph 2')">Sixty years later, those same trees stand tall. The farm has never once used a synthetic pesticide. The soil remembers every season. And the mangoes — they still taste exactly the way Thatha intended them to.</textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Paragraph 3 (closing / bold message)</label>
+          <textarea class="field-textarea" id="story-p3" oninput="markChange('Story paragraph 3')">Flying Mangoes is our way of honoring that legacy — by bringing the purest, most honest fruit from this family farm directly to yours. No cold storage. No chemicals. No compromise.</textarea>
+        </div>
+      </div>
+
+      <div class="edit-card">
+        <div class="edit-card-header">
+          <span class="edit-card-icon">📊</span>
+          <span class="edit-card-title">Stats Bar</span>
+          <span class="edit-card-desc">The brown bar with numbers</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+          <div>
+            <label class="field-label">Stat 1 Number</label>
+            <input class="field-input" id="stat1-num" value="3" oninput="markChange('Stats bar')">
+            <label class="field-label" style="margin-top: 0.5rem;">Stat 1 Label</label>
+            <input class="field-input" id="stat1-lbl" value="Generations" oninput="markChange('Stats bar')">
+          </div>
+          <div>
+            <label class="field-label">Stat 2 Number</label>
+            <input class="field-input" id="stat2-num" value="62+" oninput="markChange('Stats bar')">
+            <label class="field-label" style="margin-top: 0.5rem;">Stat 2 Label</label>
+            <input class="field-input" id="stat2-lbl" value="Years of Farming" oninput="markChange('Stats bar')">
+          </div>
+          <div>
+            <label class="field-label">Stat 3 Number</label>
+            <input class="field-input" id="stat3-num" value="1 ha" oninput="markChange('Stats bar')">
+            <label class="field-label" style="margin-top: 0.5rem;">Stat 3 Label</label>
+            <input class="field-input" id="stat3-lbl" value="Organic Land" oninput="markChange('Stats bar')">
+          </div>
+          <div>
+            <label class="field-label">Stat 4 Number</label>
+            <input class="field-input" id="stat4-num" value="0" oninput="markChange('Stats bar')">
+            <label class="field-label" style="margin-top: 0.5rem;">Stat 4 Label</label>
+            <input class="field-input" id="stat4-lbl" value="Chemicals Used" oninput="markChange('Stats bar')">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="panel" id="panel-products">
+      <div class="edit-card" style="margin-bottom: 1.5rem;">
+        <div class="edit-card-header">
+          <span class="edit-card-icon">🥭</span>
+          <span class="edit-card-title">Products Section Header</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Section Label</label>
+          <input class="field-input" id="prod-section-label" value="This Season's Harvest" oninput="markChange('Products section label')">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Section Headline</label>
+          <input class="field-input" id="prod-section-h2" value="Fresh from the farm, straight to your door." oninput="markChange('Products section headline')">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Section Description</label>
+          <textarea class="field-textarea" id="prod-section-desc" oninput="markChange('Products section description')">Hand-picked at peak ripeness. Packed with care. Every box carries three generations of knowing exactly when a mango is ready.</textarea>
+        </div>
+      </div>
+
+      <div class="products-edit-grid" id="products-grid">
+        <!-- Product cards generated by JS -->
+      </div>
+    </div>
+
+    <!-- VALUES -->
+    <div class="panel" id="panel-values">
+      <div id="values-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="panel" id="panel-settings">
+      <div class="edit-card">
+        <div class="edit-card-header">
+          <span class="edit-card-icon">🏷️</span>
+          <span class="edit-card-title">Brand Basics</span>
+        </div>
+        <div class="settings-row">
+          <div class="field-group">
+            <label class="field-label">Brand Name</label>
+            <input class="field-input" id="brand-name" value="Flying Mangoes" oninput="markChange('Brand name')">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Tagline</label>
+            <input class="field-input" id="brand-tagline" value="Farm to your door since 1962." oninput="markChange('Brand tagline')">
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="field-group">
+            <label class="field-label">Footer Note</label>
+            <input class="field-input" id="footer-note" value="Est. 1962 by Thatha. Grown with love ever since." oninput="markChange('Footer note')">
+          </div>
+          <div class="field-group">
+            <label class="field-label">WhatsApp Number (for orders)</label>
+            <input class="field-input" id="wa-number" placeholder="+91 98765 43210" oninput="markChange('WhatsApp number')">
+          </div>
+        </div>
+      </div>
+      <div class="edit-card">
+        <div class="edit-card-header">
+          <span class="edit-card-icon">📢</span>
+          <span class="edit-card-title">Order CTA Section</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">CTA Headline</label>
+          <input class="field-input" id="cta-h2" value="Don't miss this season's harvest." oninput="markChange('CTA headline')">
+        </div>
+        <div class="field-group">
+          <label class="field-label">CTA Subtext</label>
+          <textarea class="field-textarea" id="cta-sub" oninput="markChange('CTA subtext')">We have 300–400 mangoes ready this weekend. Once they're gone, they're gone until next season.</textarea>
+        </div>
+        <div class="settings-row">
+          <div class="field-group">
+            <label class="field-label">Input Placeholder</label>
+            <input class="field-input" id="cta-placeholder" value="Enter your phone number" oninput="markChange('CTA input')">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Button Text</label>
+            <input class="field-input" id="cta-btn" value="Notify Me" oninput="markChange('CTA button')">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+const products = [
+  { id: 1, name: "The Classic Dozen", desc: "12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.", price: "₹699", priceUnit: "/ box", badge: "Bestseller", emoji: "🥭", img: null },
+  { id: 2, name: "The Family Box", desc: "24 mixed mangoes — Alphonso & Kesar. For the family that eats together and argues over the best variety.", price: "₹1,199", priceUnit: "/ box", badge: "New", emoji: "🌿", img: null },
+  { id: 3, name: "Thatha's Reserve", desc: "6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.", price: "₹799", priceUnit: "/ box", badge: "Limited", emoji: "✨", img: null },
+  { id: 4, name: "Gift a Harvest", desc: "Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.", price: "₹899", priceUnit: "/ box", badge: "", emoji: "🎁", img: null }
+];
+
+const values = [
+  { id: 1, icon: "🌱", title: "Truly Organic", text: "Not certified by a committee — proven by 62 years of farming without a single chemical. The soil tells the truth." },
+  { id: 2, icon: "🚀", title: "Farm to Door in 24hrs", text: "We pick when you order. Not the other way around. Your mango was on the tree yesterday." },
+  { id: 3, icon: "🤝", title: "No Middlemen", text: "Direct from our family farm to you. More flavour for you. Fair price for us. Everyone wins except the middleman." },
+  { id: 4, icon: "🌳", title: "A Living Legacy", text: "Every mango you buy helps keep this farm alive for the next generation. You're not just buying fruit — you're preserving a way of life." }
+];
+
+let changes = [];
+let changeCount = 0;
+
+function markChange(field) {
+  changeCount++;
+  document.getElementById('changes-count').textContent = changeCount;
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  changes.unshift({ field, time: timeStr });
+  if (changes.length > 20) changes.pop();
+  renderLog();
+}
+
+function renderLog() {
+  const log = document.getElementById('change-log');
+  if (changes.length === 0) { log.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem; padding: 1rem 0;">No changes yet.</div>'; return; }
+  log.innerHTML = changes.map(c => `<div class="log-item"><div class="log-dot"></div><div><div class="log-text">${c.field} edited</div><div class="log-time">${c.time}</div></div></div>`).join('');
+}
+
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+  const titles = { dashboard: 'Dashboard <span>— Overview</span>', hero: 'Hero Section <span>— Edit headline &amp; text</span>', story: 'Our Story <span>— Edit brand narrative</span>', products: 'Products <span>— Edit listings &amp; photos</span>', values: 'Why Us <span>— Edit value props</span>', settings: 'Settings <span>— Brand &amp; CTA config</span>' };
+  document.getElementById('topbar-title').innerHTML = titles[id];
+}
+
+function updateHeroPreview() {
+  const l1 = document.getElementById('hero-h1-1').value;
+  const l2 = document.getElementById('hero-h1-2').value;
+  const l3 = document.getElementById('hero-h1-3').value;
+  const sub = document.getElementById('hero-subtitle').value;
+  document.getElementById('preview-h1').innerHTML = `${l1}<br><em>${l2}</em><br>${l3}`;
+  document.getElementById('preview-sub').textContent = sub.substring(0, 120) + (sub.length > 120 ? '...' : '');
+}
+
+function renderProducts() {
+  const grid = document.getElementById('products-grid');
+  grid.innerHTML = products.map(p => `
+    <div class="product-edit-card">
+      <div class="img-upload-zone ${p.img ? 'has-image' : ''}" id="zone-${p.id}" onclick="triggerUpload(${p.id})">
+        <img class="upload-preview ${p.img ? 'visible' : ''}" id="preview-${p.id}" src="${p.img || ''}" alt="">
+        <div class="upload-placeholder" id="placeholder-${p.id}" style="${p.img ? 'display:none' : ''}">
+          <span class="upload-icon">${p.emoji}</span>
+          <div class="upload-text">Click to upload photo</div>
+          <div class="upload-sub">PNG, JPG up to 5MB</div>
+        </div>
+        <div class="upload-overlay">📷 Change Photo</div>
+        <input type="file" accept="image/*" id="file-${p.id}" style="display:none" onchange="handleUpload(event, ${p.id})">
+      </div>
+      <div class="product-edit-body">
+        <div class="product-badge-row">
+          <select class="badge-select" id="badge-${p.id}" onchange="products[${p.id-1}].badge = this.value; markChange('Product ${p.id} badge')">
+            <option value="">No badge</option>
+            ${['Bestseller','New','Limited','Sale','Organic','Seasonal'].map(b => `<option ${p.badge===b?'selected':''}>${b}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Product Name</label>
+          <input class="field-input" value="${p.name}" oninput="products[${p.id-1}].name=this.value; markChange('Product ${p.id} name')">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Description</label>
+          <textarea class="field-textarea" style="min-height: 70px;" oninput="products[${p.id-1}].desc=this.value; markChange('Product ${p.id} description')">${p.desc}</textarea>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="field-group" style="margin-bottom: 0;">
+            <label class="field-label">Price</label>
+            <input class="field-input" value="${p.price}" oninput="products[${p.id-1}].price=this.value; markChange('Product ${p.id} price')">
+          </div>
+          <div class="field-group" style="margin-bottom: 0;">
+            <label class="field-label">Unit</label>
+            <input class="field-input" value="${p.priceUnit}" oninput="products[${p.id-1}].priceUnit=this.value; markChange('Product ${p.id} unit')">
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function triggerUpload(id) {
+  document.getElementById('file-' + id).click();
+}
+
+function handleUpload(event, id) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = document.getElementById('preview-' + id);
+    const zone = document.getElementById('zone-' + id);
+    const placeholder = document.getElementById('placeholder-' + id);
+    img.src = e.target.result;
+    img.classList.add('visible');
+    zone.classList.add('has-image');
+    placeholder.style.display = 'none';
+    products[id-1].img = e.target.result;
+    markChange('Product ' + id + ' photo');
+    showToast('📸 Photo uploaded for product ' + id + '!');
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderValues() {
+  const grid = document.getElementById('values-grid');
+  grid.innerHTML = values.map(v => `
+    <div class="edit-card" style="margin-bottom: 0;">
+      <div class="edit-card-header">
+        <span class="edit-card-icon">${v.icon}</span>
+        <span class="edit-card-title">Value Card ${v.id}</span>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Icon / Emoji</label>
+        <input class="field-input" value="${v.icon}" oninput="values[${v.id-1}].icon=this.value; markChange('Value ${v.id} icon')" style="font-size: 1.2rem;">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Title</label>
+        <input class="field-input" value="${v.title}" oninput="values[${v.id-1}].title=this.value; markChange('Value ${v.id} title')">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Description</label>
+        <textarea class="field-textarea" style="min-height: 80px;" oninput="values[${v.id-1}].text=this.value; markChange('Value ${v.id} text')">${v.text}</textarea>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function saveAll() {
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  // Collect all data and save to localStorage
+  const siteData = {
+    hero: {
+      badge: document.getElementById('hero-badge').value,
+      h1_1: document.getElementById('hero-h1-1').value,
+      h1_2: document.getElementById('hero-h1-2').value,
+      h1_3: document.getElementById('hero-h1-3').value,
+      subtitle: document.getElementById('hero-subtitle').value,
+      btn1: document.getElementById('hero-btn1').value,
+      btn2: document.getElementById('hero-btn2').value,
+      tag1: document.getElementById('tag1').value,
+      tag2: document.getElementById('tag2').value,
+      tag3: document.getElementById('tag3').value,
+    },
+    story: {
+      year: document.getElementById('story-year').value,
+      since: document.getElementById('story-since').value,
+      h2: document.getElementById('story-h2').value,
+      p1: document.getElementById('story-p1').value,
+      p2: document.getElementById('story-p2').value,
+      p3: document.getElementById('story-p3').value,
+    },
+    stats: {
+      s1n: document.getElementById('stat1-num').value, s1l: document.getElementById('stat1-lbl').value,
+      s2n: document.getElementById('stat2-num').value, s2l: document.getElementById('stat2-lbl').value,
+      s3n: document.getElementById('stat3-num').value, s3l: document.getElementById('stat3-lbl').value,
+      s4n: document.getElementById('stat4-num').value, s4l: document.getElementById('stat4-lbl').value,
+    },
+    products: products,
+    values: values,
+    settings: {
+      brandName: document.getElementById('brand-name').value,
+      tagline: document.getElementById('brand-tagline').value,
+      footerNote: document.getElementById('footer-note').value,
+      waNumber: document.getElementById('wa-number').value,
+      ctaH2: document.getElementById('cta-h2').value,
+      ctaSub: document.getElementById('cta-sub').value,
+    }
+  };
+
+  try { localStorage.setItem('flyingMangoesSiteData', JSON.stringify(siteData)); } catch(e) {}
+
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.textContent = '💾 Save Changes';
+    changeCount = 0;
+    document.getElementById('changes-count').textContent = '0';
+    changes = [];
+    renderLog();
+    document.querySelector('.sidebar-footer div').textContent = 'Last saved: Just now';
+    showToast('✅ All changes saved successfully!');
+  }, 800);
+}
+
+// Init
+renderProducts();
+renderValues();
+</script>
+</body>
+</html>
