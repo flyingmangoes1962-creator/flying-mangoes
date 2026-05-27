@@ -243,56 +243,8 @@
     <h2>Fresh from the farm,<br>straight to your door.</h2>
     <p>Hand-picked at peak ripeness. Packed with care. Every box carries three generations of knowing exactly when a mango is ready.</p>
   </div>
-  <div class="products-grid">
-
-    <div class="product-card">
-      <div class="product-img product-img-1">🥭<div class="product-badge">Bestseller</div></div>
-      <div class="product-info">
-        <div class="product-name">The Classic Dozen</div>
-        <div class="product-desc">12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.</div>
-        <div class="product-footer">
-          <div class="product-price">₹699 <span>/ box</span></div>
-          <button class="pay-btn" onclick="startPayment('The Classic Dozen', 69900)"><span class="upi-icon">💳</span> Pay via UPI</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card">
-      <div class="product-img product-img-2">🌿<div class="product-badge">New</div></div>
-      <div class="product-info">
-        <div class="product-name">The Family Box</div>
-        <div class="product-desc">24 mixed mangoes — Alphonso &amp; Kesar. For the family that eats together and argues over the best variety.</div>
-        <div class="product-footer">
-          <div class="product-price">₹1,199 <span>/ box</span></div>
-          <button class="pay-btn" onclick="startPayment('The Family Box', 119900)"><span class="upi-icon">💳</span> Pay via UPI</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card">
-      <div class="product-img product-img-3">✨<div class="product-badge">Limited</div></div>
-      <div class="product-info">
-        <div class="product-name">Thatha's Reserve</div>
-        <div class="product-desc">6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.</div>
-        <div class="product-footer">
-          <div class="product-price">₹799 <span>/ box</span></div>
-          <button class="pay-btn" onclick="startPayment('Thatha\'s Reserve', 79900)"><span class="upi-icon">💳</span> Pay via UPI</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card">
-      <div class="product-img product-img-4">🎁</div>
-      <div class="product-info">
-        <div class="product-name">Gift a Harvest</div>
-        <div class="product-desc">Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.</div>
-        <div class="product-footer">
-          <div class="product-price">₹899 <span>/ box</span></div>
-          <button class="pay-btn" onclick="startPayment('Gift a Harvest', 89900)"><span class="upi-icon">💳</span> Pay via UPI</button>
-        </div>
-      </div>
-    </div>
-
+  <div class="products-grid" id="products-grid">
+    <!-- Rendered dynamically from admin inventory -->
   </div>
 </section>
 
@@ -368,12 +320,82 @@
 <div class="toast" id="toast"></div>
 
 <script>
+  // ── Product defaults (fallback if admin hasn't saved yet) ──────────────
+  const DEFAULT_PRODUCTS = [
+    { id:1, name:'The Classic Dozen',  desc:'12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.', price:'₹699',   priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:null, pricePaise:69900,  stock:50, inStock:true },
+    { id:2, name:'The Family Box',     desc:'24 mixed mangoes — Alphonso & Kesar. For the family that eats together and argues over the best variety.', price:'₹1,199', priceUnit:'/ box', badge:'New',        emoji:'🌿', img:null, pricePaise:119900, stock:30, inStock:true },
+    { id:3, name:"Thatha's Reserve",   desc:'6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.', price:'₹799',   priceUnit:'/ box', badge:'Limited',    emoji:'✨', img:null, pricePaise:79900,  stock:10, inStock:true },
+    { id:4, name:'Gift a Harvest',     desc:'Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.', price:'₹899',   priceUnit:'/ box', badge:'',           emoji:'🎁', img:null, pricePaise:89900,  stock:20, inStock:true }
+  ];
+  const IMG_BG = ['product-img-1','product-img-2','product-img-3','product-img-4'];
+
+  function loadProducts() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('flyingMangoesSiteData') || '{}');
+      if (saved.products && saved.products.length) return saved.products;
+    } catch(e) {}
+    return DEFAULT_PRODUCTS;
+  }
+
+  function saveOrder(order) {
+    try {
+      const orders = JSON.parse(localStorage.getItem('flyingMangoesOrders') || '[]');
+      orders.unshift(order);
+      localStorage.setItem('flyingMangoesOrders', JSON.stringify(orders));
+    } catch(e) {}
+  }
+
+  function decrementStock(productName) {
+    try {
+      const saved = JSON.parse(localStorage.getItem('flyingMangoesSiteData') || '{}');
+      const prods = saved.products || DEFAULT_PRODUCTS;
+      const idx = prods.findIndex(p => p.name === productName);
+      if (idx !== -1) {
+        prods[idx].stock = Math.max(0, (prods[idx].stock || 1) - 1);
+        if (prods[idx].stock === 0) prods[idx].inStock = false;
+      }
+      saved.products = prods;
+      localStorage.setItem('flyingMangoesSiteData', JSON.stringify(saved));
+      renderProducts(); // re-render so sold-out updates immediately
+    } catch(e) {}
+  }
+
+  function renderProducts() {
+    const products = loadProducts();
+    const grid = document.getElementById('products-grid');
+    grid.innerHTML = products.map((p, i) => {
+      const soldOut = !p.inStock || p.stock === 0;
+      const imgContent = p.img
+        ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;" alt="${p.name}">`
+        : p.emoji || '🥭';
+      const badgeHtml = soldOut
+        ? `<div class="product-badge" style="background:#888;">Sold Out</div>`
+        : (p.badge ? `<div class="product-badge">${p.badge}</div>` : '');
+      const nameEsc = (p.name || '').replace(/'/g, "\\'");
+      return `
+        <div class="product-card">
+          <div class="product-img ${IMG_BG[i % 4]}">${imgContent}${badgeHtml}</div>
+          <div class="product-info">
+            <div class="product-name">${p.name}</div>
+            <div class="product-desc">${p.desc}</div>
+            <div class="product-footer">
+              <div class="product-price">${p.price} <span>${p.priceUnit}</span></div>
+              ${soldOut
+                ? `<button class="pay-btn" disabled>Sold Out</button>`
+                : `<button class="pay-btn" onclick="startPayment('${nameEsc}', ${p.pricePaise || 0})"><span class="upi-icon">💳</span> Pay via UPI</button>`}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // ── Payment flow ────────────────────────────────────────────────────────
   let pendingProduct = null;
-  let pendingAmount = null;
+  let pendingAmount  = null;
 
   function startPayment(productName, amountPaise) {
     pendingProduct = productName;
-    pendingAmount = amountPaise;
+    pendingAmount  = amountPaise;
     document.getElementById('phone-modal-product-line').textContent =
       `Ordering: ${productName} — ₹${(amountPaise/100).toLocaleString('en-IN')}. Enter your WhatsApp number for order confirmation.`;
     document.getElementById('customer-phone').value = '';
@@ -389,21 +411,17 @@
   async function proceedToPayment() {
     const phone = document.getElementById('customer-phone').value.trim();
     if (!phone || phone.length !== 10 || !/^\d+$/.test(phone)) {
-      showToast('Please enter a valid 10-digit phone number');
-      return;
+      showToast('Please enter a valid 10-digit phone number'); return;
     }
     const btn = document.getElementById('proceed-btn');
     btn.disabled = true; btn.textContent = 'Creating order...';
-
     try {
-      const res = await fetch('/api/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res  = await fetch('/api/create-order', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: pendingAmount, currency: 'INR', receipt: `receipt_${Date.now()}`, product_name: pendingProduct })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to create order');
-
       closePhoneModal();
       openRazorpay(data, pendingProduct, pendingAmount, '+91' + phone);
     } catch (err) {
@@ -415,45 +433,45 @@
 
   function openRazorpay(orderData, productName, amountPaise, customerPhone) {
     const options = {
-      key: orderData.key_id,
-      amount: orderData.amount,
-      currency: orderData.currency,
-      name: 'Flying Mangoes 🥭',
-      description: productName,
-      order_id: orderData.order_id,
+      key: orderData.key_id, amount: orderData.amount, currency: orderData.currency,
+      name: 'Flying Mangoes 🥭', description: productName, order_id: orderData.order_id,
       prefill: { contact: customerPhone },
       theme: { color: '#F5820A' },
-      modal: {
-        ondismiss: () => showToast('Payment cancelled. You can try again anytime.')
-      },
+      modal: { ondismiss: () => showToast('Payment cancelled. You can try again anytime.') },
       handler: async function(response) {
         showToast('✅ Payment received! Verifying...');
         await verifyPayment(response, productName, amountPaise, customerPhone);
       }
     };
     const rzp = new Razorpay(options);
-    rzp.on('payment.failed', function(resp) {
-      showToast('❌ Payment failed: ' + (resp.error.description || 'Please try again'));
-    });
+    rzp.on('payment.failed', resp => showToast('❌ Payment failed: ' + (resp.error.description || 'Please try again')));
     rzp.open();
   }
 
   async function verifyPayment(response, productName, amountPaise, customerPhone) {
     try {
-      const res = await fetch('/api/verify-payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res  = await fetch('/api/verify-payment', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          razorpay_order_id: response.razorpay_order_id,
+          razorpay_order_id:  response.razorpay_order_id,
           razorpay_payment_id: response.razorpay_payment_id,
           razorpay_signature: response.razorpay_signature,
-          product_name: productName,
-          amount: amountPaise,
-          customer_phone: customerPhone
+          product_name: productName, amount: amountPaise, customer_phone: customerPhone
         })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
+
+      // Save order to localStorage (visible in admin → Orders)
+      saveOrder({
+        id: Date.now(), timestamp: new Date().toISOString(),
+        product: productName, amount: amountPaise,
+        paymentId: response.razorpay_payment_id,
+        orderId:   response.razorpay_order_id,
+        customerPhone
+      });
+      // Decrement stock and re-render
+      decrementStock(productName);
 
       document.getElementById('success-product-text').textContent =
         `${productName} — ₹${(amountPaise/100).toLocaleString('en-IN')}. We'll deliver within 24 hours.`;
@@ -465,15 +483,13 @@
     }
   }
 
-  function closeSuccessModal() {
-    document.getElementById('success-modal').classList.remove('show');
-  }
+  function closeSuccessModal() { document.getElementById('success-modal').classList.remove('show'); }
 
   function notifyMe() {
     const phone = document.getElementById('notify-phone').value.trim();
     if (!phone || phone.length < 10) { showToast('Please enter a valid phone number'); return; }
     document.getElementById('notify-phone').value = '';
-    showToast('🥭 Added! We\'ll WhatsApp you shortly.');
+    showToast("🥭 Added! We'll WhatsApp you shortly.");
   }
 
   function showToast(msg) {
@@ -482,26 +498,19 @@
     setTimeout(() => t.classList.remove('show'), 3500);
   }
 
+  // ── Init ────────────────────────────────────────────────────────────────
+  renderProducts();
+
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const target = document.querySelector(a.getAttribute('href'));
       if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
     });
   });
-
-  // Close modals on overlay click
-  document.getElementById('phone-modal-overlay').addEventListener('click', function(e) {
-    if (e.target === this) closePhoneModal();
-  });
-  document.getElementById('success-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeSuccessModal();
-  });
-
-  // Enter key on phone field
+  document.getElementById('phone-modal-overlay').addEventListener('click', function(e) { if (e.target === this) closePhoneModal(); });
+  document.getElementById('success-modal').addEventListener('click', function(e) { if (e.target === this) closeSuccessModal(); });
   document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('customer-phone').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') proceedToPayment();
-    });
+    document.getElementById('customer-phone').addEventListener('keypress', e => { if (e.key === 'Enter') proceedToPayment(); });
   });
 </script>
 </body>
