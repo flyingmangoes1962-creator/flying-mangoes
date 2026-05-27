@@ -167,7 +167,7 @@
 
 <nav>
   <a href="#" class="nav-logo">
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><ellipse cx="18" cy="22" rx="12" ry="9" fill="#F5820A"/><ellipse cx="18" cy="20" rx="10" ry="8" fill="#F9A825"/><path d="M18 14 C18 14 22 8 28 6 C24 10 20 12 18 14Z" fill="#2D5016"/><path d="M18 14 C18 14 14 8 8 7 C12 11 16 13 18 14Z" fill="#4A7C23"/><circle cx="18" cy="14" r="1.5" fill="#2D5016"/></svg>
+    <img src="images/logo.png" alt="Flying Mangoes" style="height:44px;width:44px;object-fit:contain;border-radius:4px;">
     <span class="nav-logo-text">Flying Mangoes</span>
   </a>
   <ul class="nav-links">
@@ -194,22 +194,13 @@
     </div>
   </div>
   <div class="hero-visual">
-    <svg class="mango-illustration" viewBox="0 0 420 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="210" cy="330" rx="120" ry="20" fill="#F5820A" opacity="0.12"/>
-      <ellipse cx="210" cy="340" rx="90" ry="12" fill="#C45E00" opacity="0.2"/>
-      <path d="M210 60 C240 60 290 90 310 150 C330 210 320 280 280 320 C260 340 240 350 210 350 C180 350 160 340 140 320 C100 280 90 210 110 150 C130 90 180 60 210 60Z" fill="#F9A825"/>
-      <path d="M180 90 C195 80 215 78 230 85 C220 100 195 108 180 90Z" fill="#FFD54F" opacity="0.6"/>
-      <path d="M270 130 C285 160 290 200 280 240 C270 280 250 310 230 325 C255 300 270 260 270 220 C272 190 268 155 270 130Z" fill="#C45E00" opacity="0.25"/>
-      <path d="M210 60 C210 40 215 20 225 10" stroke="#5C3D1E" stroke-width="4" stroke-linecap="round"/>
-      <path d="M225 10 C235 0 260 -5 270 5 C260 15 240 18 225 10Z" fill="#2D5016"/>
-      <path d="M225 10 C210 0 185 -8 178 5 C188 15 210 18 225 10Z" fill="#4A7C23"/>
-      <text x="210" y="220" text-anchor="middle" font-family="Georgia,serif" font-size="18" font-weight="700" fill="#7C3E00" opacity="0.85">Flying</text>
-      <text x="210" y="242" text-anchor="middle" font-family="Georgia,serif" font-size="18" font-weight="700" fill="#7C3E00" opacity="0.85">Mangoes</text>
-    </svg>
-    <div class="floating-tags">
-      <div class="tag tag-1">🌿 Zero Pesticides</div>
-      <div class="tag tag-2">🚜 Family Farm Since 1962</div>
-      <div class="tag tag-3">📦 Ships in 24hrs</div>
+    <div style="position:relative;width:100%;max-width:460px;">
+      <img src="images/mangoes-closeup.jpg" alt="Fresh Alphonso Mangoes from the farm" style="width:100%;height:420px;object-fit:cover;border-radius:2rem;box-shadow:0 20px 60px rgba(245,130,10,0.25);">
+      <div class="floating-tags">
+        <div class="tag tag-1">🌿 Zero Pesticides</div>
+        <div class="tag tag-2">🚜 Family Farm Since 1962</div>
+        <div class="tag tag-3">📦 Ships in 24hrs</div>
+      </div>
     </div>
   </div>
 </section>
@@ -224,6 +215,7 @@
 <section class="story-section" id="story">
   <div class="story-inner">
     <div class="story-meta">
+      <img src="images/thatha-portrait.jpg" alt="Thatha — the founder" style="width:100%;height:280px;object-fit:cover;object-position:center top;border-radius:1.25rem;margin-bottom:1rem;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
       <div class="story-year">1962</div>
       <div class="story-since">EST. BY THATHA</div>
     </div>
@@ -322,10 +314,10 @@
 <script>
   // ── Product defaults (fallback if admin hasn't saved yet) ──────────────
   const DEFAULT_PRODUCTS = [
-    { id:1, name:'The Classic Dozen',  desc:'12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.', price:'₹699',   priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:null, pricePaise:69900,  stock:50, inStock:true },
-    { id:2, name:'The Family Box',     desc:'24 mixed mangoes — Alphonso & Kesar. For the family that eats together and argues over the best variety.', price:'₹1,199', priceUnit:'/ box', badge:'New',        emoji:'🌿', img:null, pricePaise:119900, stock:30, inStock:true },
-    { id:3, name:"Thatha's Reserve",   desc:'6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.', price:'₹799',   priceUnit:'/ box', badge:'Limited',    emoji:'✨', img:null, pricePaise:79900,  stock:10, inStock:true },
-    { id:4, name:'Gift a Harvest',     desc:'Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.', price:'₹899',   priceUnit:'/ box', badge:'',           emoji:'🎁', img:null, pricePaise:89900,  stock:20, inStock:true }
+    { id:1, name:'The Classic Dozen',  desc:'12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.', price:'₹699',   priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:'images/mangoes-closeup.jpg', pricePaise:69900,  stock:50, inStock:true },
+    { id:2, name:'The Family Box',     desc:'24 mixed mangoes — Alphonso & Kesar. For the family that eats together and argues over the best variety.', price:'₹1,199', priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/mango-tree.jpg',     pricePaise:119900, stock:30, inStock:true },
+    { id:3, name:"Thatha's Reserve",   desc:'6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.', price:'₹799',   priceUnit:'/ box', badge:'Limited',    emoji:'✨', img:'images/thatha-farm.jpg',    pricePaise:79900,  stock:10, inStock:true },
+    { id:4, name:'Gift a Harvest',     desc:'Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.', price:'₹899',   priceUnit:'/ box', badge:'',           emoji:'🎁', img:'images/orchard.jpg',        pricePaise:89900,  stock:20, inStock:true }
   ];
   const IMG_BG = ['product-img-1','product-img-2','product-img-3','product-img-4'];
 

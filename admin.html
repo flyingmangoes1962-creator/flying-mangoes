@@ -150,7 +150,7 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <svg width="28" height="28" viewBox="0 0 36 36" fill="none"><ellipse cx="18" cy="22" rx="12" ry="9" fill="#F5820A"/><ellipse cx="18" cy="20" rx="10" ry="8" fill="#F9A825"/><path d="M18 14 C18 14 22 8 28 6 C24 10 20 12 18 14Z" fill="#2D5016"/><path d="M18 14 C18 14 14 8 8 7 C12 11 16 13 18 14Z" fill="#4A7C23"/><circle cx="18" cy="14" r="1.5" fill="#2D5016"/></svg>
+    <img src="images/logo.png" alt="Flying Mangoes" style="height:36px;width:36px;object-fit:contain;border-radius:4px;">
     <div>
       <div class="sidebar-logo-text">Flying Mangoes</div>
       <span class="sidebar-logo-sub">Admin Panel</span>
@@ -339,10 +339,10 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
 <script>
 // ── DATA ─────────────────────────────────────────────────────────────────
 const products = [
-  { id:1, name:'The Classic Dozen',  desc:'12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.',                                              price:'₹699',   priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:null, pricePaise:69900,  stock:50, inStock:true },
-  { id:2, name:'The Family Box',     desc:'24 mixed mangoes — Alphonso & Kesar. For the family that eats together and argues over the best variety.',                                 price:'₹1,199', priceUnit:'/ box', badge:'New',        emoji:'🌿', img:null, pricePaise:119900, stock:30, inStock:true },
-  { id:3, name:"Thatha's Reserve",   desc:'6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.',                               price:'₹799',   priceUnit:'/ box', badge:'Limited',    emoji:'✨', img:null, pricePaise:79900,  stock:10, inStock:true },
-  { id:4, name:'Gift a Harvest',     desc:'Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.',                                  price:'₹899',   priceUnit:'/ box', badge:'',           emoji:'🎁', img:null, pricePaise:89900,  stock:20, inStock:true }
+  { id:1, name:'The Classic Dozen',  desc:'12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.',                                              price:'₹699',   priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:'images/mangoes-closeup.jpg', pricePaise:69900,  stock:50, inStock:true },
+  { id:2, name:'The Family Box',     desc:'24 mixed mangoes — Alphonso & Kesar. For the family that eats together and argues over the best variety.',                                 price:'₹1,199', priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/mango-tree.jpg',     pricePaise:119900, stock:30, inStock:true },
+  { id:3, name:"Thatha's Reserve",   desc:'6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.',                               price:'₹799',   priceUnit:'/ box', badge:'Limited',    emoji:'✨', img:'images/thatha-farm.jpg',    pricePaise:79900,  stock:10, inStock:true },
+  { id:4, name:'Gift a Harvest',     desc:'Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.',                                  price:'₹899',   priceUnit:'/ box', badge:'',           emoji:'🎁', img:'images/orchard.jpg',        pricePaise:89900,  stock:20, inStock:true }
 ];
 
 const values = [
