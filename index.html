@@ -100,13 +100,15 @@
   .value-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
   .value-text { font-size: 0.875rem; color: var(--text-muted); line-height: 1.7; }
 
-  .order-section { background: var(--mango); text-align: center; padding: 5rem 3rem; position: relative; overflow: hidden; }
-  .order-section::before { content: '🥭'; position: absolute; font-size: 15rem; opacity: 0.07; top: -2rem; left: -2rem; transform: rotate(-15deg); }
-  .order-section::after { content: '🥭'; position: absolute; font-size: 12rem; opacity: 0.07; bottom: -2rem; right: -1rem; transform: rotate(20deg); }
-  .order-inner { position: relative; z-index: 1; }
-  .order-section h2 { color: white; font-size: clamp(2rem,4vw,3rem); margin-bottom: 1rem; }
-  .order-section p { color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 2.5rem; font-weight: 300; }
-  .order-form { display: flex; max-width: 440px; margin: 0 auto; background: white; border-radius: 3rem; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.15); }
+  .order-section { background: var(--mango); padding: 5rem 3rem; position: relative; overflow: hidden; }
+  .order-inner { position: relative; z-index: 1; display: flex; align-items: center; gap: 5rem; max-width: 960px; margin: 0 auto; }
+  .order-logo-side { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .order-logo-side img { width: 180px; height: 180px; object-fit: contain; border-radius: 1.5rem; background: white; padding: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
+  .order-logo-side span { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: white; letter-spacing: 0.02em; }
+  .order-content { flex: 1; }
+  .order-section h2 { color: white; font-size: clamp(1.8rem,3.5vw,2.6rem); margin-bottom: 0.75rem; }
+  .order-section p { color: rgba(255,255,255,0.85); font-size: 1rem; margin-bottom: 2rem; font-weight: 300; }
+  .order-form { display: flex; max-width: 440px; background: white; border-radius: 3rem; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.15); }
   .order-input { flex: 1; border: none; outline: none; padding: 1rem 1.5rem; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; color: var(--text); background: transparent; }
   .order-input::placeholder { color: #AAA; }
   .order-btn { background: var(--mango-dark); color: white; border: none; padding: 1rem 1.75rem; font-size: 0.9rem; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; border-radius: 3rem; transition: background 0.2s; white-space: nowrap; }
@@ -166,6 +168,9 @@
     .hero-visual { order: -1; } .mango-illustration { max-width: 280px; }
     .story-inner { grid-template-columns: 1fr; gap: 2rem; }
     section { padding: 3.5rem 1.5rem; } .stats-bar { gap: 2rem; padding: 1.5rem; } footer { padding: 2rem 1.5rem; }
+    .order-inner { flex-direction: column; gap: 2rem; text-align: center; }
+    .order-logo-side img { width: 120px; height: 120px; }
+    .order-form { max-width: 100%; }
   }
 </style>
 </head>
@@ -261,14 +266,20 @@
 
 <section class="order-section" id="order">
   <div class="order-inner">
-    <div class="section-label" style="color:rgba(255,255,255,0.6);">Limited Season Stock</div>
-    <h2>Don't miss this season's harvest.</h2>
-    <p>300–400 mangoes ready this weekend. Once they're gone, they're gone.</p>
-    <div class="order-form">
-      <input class="order-input" type="tel" placeholder="Enter your phone number" id="notify-phone"/>
-      <button class="order-btn" onclick="notifyMe()">Notify Me</button>
+    <div class="order-logo-side">
+      <img src="images/logo.png" alt="Flying Mangoes Logo">
+      <span>Flying Mangoes</span>
     </div>
-    <p style="font-size:0.78rem;margin-top:1rem;color:rgba(255,255,255,0.5);">We'll WhatsApp you with the order link. No spam, ever.</p>
+    <div class="order-content">
+      <div class="section-label" style="color:rgba(255,255,255,0.6);">Limited Season Stock</div>
+      <h2>Don't miss this season's harvest.</h2>
+      <p>300–400 mangoes ready this weekend. Once they're gone, they're gone.</p>
+      <div class="order-form">
+        <input class="order-input" type="tel" placeholder="Enter your phone number" id="notify-phone"/>
+        <button class="order-btn" onclick="notifyMe()">Notify Me</button>
+      </div>
+      <p style="font-size:0.78rem;margin-top:1rem;color:rgba(255,255,255,0.5);">We'll WhatsApp you with the order link. No spam, ever.</p>
+    </div>
   </div>
 </section>
 
