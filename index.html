@@ -151,13 +151,16 @@
   .phone-input-row { display: flex; gap: 0; background: #F5F0E8; border-radius: 0.75rem; overflow: hidden; margin-bottom: 0.85rem; border: 1.5px solid rgba(92,61,30,0.15); }
   .phone-prefix { padding: 0.75rem 0.9rem; font-size: 0.9rem; color: var(--text-muted); background: transparent; font-weight: 500; }
   .phone-field { flex: 1; border: none; outline: none; padding: 0.75rem 0.5rem; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; background: transparent; color: var(--text); }
-  .addr-field { width: 100%; border: 1.5px solid rgba(92,61,30,0.15); border-radius: 0.75rem; padding: 0.75rem 0.9rem; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--text); outline: none; margin-bottom: 0.85rem; box-sizing: border-box; }
+  .addr-field { width: 100%; border: 1.5px solid rgba(92,61,30,0.15); border-radius: 0.75rem; padding: 0.75rem 0.9rem; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--text); outline: none; margin-bottom: 0.75rem; box-sizing: border-box; transition: border-color 0.2s, background 0.2s; }
   .addr-field:focus { border-color: var(--mango); background: white; }
-  .addr-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-  .addr-label { font-size: 0.72rem; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; display: block; }
-  .form-section { border-top: 1px solid rgba(92,61,30,0.1); padding-top: 0.85rem; margin-top: 0.85rem; }
-  .form-section-title { font-size: 0.75rem; font-weight: 600; color: var(--mango-dark); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
-  .proceed-btn { background: var(--mango); color: white; border: none; padding: 0.85rem; border-radius: 0.75rem; font-size: 0.95rem; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; width: 100%; transition: background 0.2s; margin-top: 0.5rem; }
+  .addr-field::placeholder { color: #B0A090; }
+  .addr-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+  .addr-label { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.25rem; display: block; }
+  .form-section { border-top: 1px solid rgba(92,61,30,0.1); padding-top: 0.75rem; margin-top: 0.75rem; }
+  .form-section-title { font-size: 0.72rem; font-weight: 700; color: var(--mango-dark); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.65rem; }
+  .pin-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; align-items: start; }
+  .city-auto { background: #F0FFF4; border-color: #86EFAC !important; color: #15803D; font-weight: 500; }
+  .proceed-btn { background: var(--mango); color: white; border: none; padding: 1rem; border-radius: 0.75rem; font-size: 1rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; width: 100%; transition: background 0.2s; margin-top: 0.5rem; letter-spacing: 0.01em; }
   .proceed-btn:hover { background: var(--mango-dark); }
   .proceed-btn:disabled { background: #CCC; cursor: not-allowed; }
 
@@ -300,40 +303,48 @@
 
 <!-- CHECKOUT MODAL -->
 <div class="modal-overlay" id="phone-modal-overlay">
-  <div class="phone-modal">
-    <div style="font-size:2rem;margin-bottom:0.5rem;">🥭</div>
-    <h3>Complete Your Order</h3>
-    <p id="phone-modal-product-line" style="margin-bottom:1rem;"></p>
+  <div class="phone-modal" style="max-width:400px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.6rem;">
+      <span style="font-size:1.6rem;">🥭</span>
+      <div>
+        <h3 style="font-size:1.15rem;margin-bottom:0;">Complete Your Order</h3>
+        <p id="phone-modal-product-line" style="font-size:0.85rem;color:var(--mango-dark);font-weight:500;margin:0;"></p>
+      </div>
+    </div>
 
     <!-- Contact -->
-    <div class="form-section-title">Contact Details</div>
-    <label class="addr-label">Full Name</label>
-    <input class="addr-field" type="text" id="customer-name" placeholder="Rahul Sharma" autocomplete="name">
-    <label class="addr-label">WhatsApp Number</label>
-    <div class="phone-input-row">
-      <span class="phone-prefix">+91</span>
-      <input class="phone-field" type="tel" id="customer-phone" placeholder="98765 43210" maxlength="10">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;margin-bottom:0.65rem;">
+      <div>
+        <label class="addr-label">Name</label>
+        <input class="addr-field" type="text" id="customer-name" placeholder="Your name" autocomplete="name" style="margin-bottom:0;">
+      </div>
+      <div>
+        <label class="addr-label">WhatsApp</label>
+        <div class="phone-input-row" style="margin-bottom:0;">
+          <span class="phone-prefix">+91</span>
+          <input class="phone-field" type="tel" id="customer-phone" placeholder="98765 43210" maxlength="10">
+        </div>
+      </div>
     </div>
 
     <!-- Delivery Address -->
     <div class="form-section">
       <div class="form-section-title">📦 Delivery Address</div>
-      <label class="addr-label">Street Address</label>
-      <input class="addr-field" type="text" id="customer-address" placeholder="123, MG Road, Apt 4B" autocomplete="street-address">
-      <div class="addr-row">
-        <div>
-          <label class="addr-label">City</label>
-          <input class="addr-field" type="text" id="customer-city" placeholder="Bengaluru" style="margin-bottom:0;" autocomplete="address-level2">
-        </div>
+      <input class="addr-field" type="text" id="customer-address" placeholder="House no., Street, Landmark, Area" autocomplete="street-address">
+      <div class="pin-row">
         <div>
           <label class="addr-label">Pincode</label>
-          <input class="addr-field" type="text" id="customer-pincode" placeholder="560001" maxlength="6" style="margin-bottom:0;" autocomplete="postal-code">
+          <input class="addr-field" type="tel" id="customer-pincode" placeholder="560001" maxlength="6" style="margin-bottom:0;" autocomplete="postal-code" oninput="autoFillCity(this.value)">
+        </div>
+        <div>
+          <label class="addr-label">City <span id="city-auto-label" style="color:#16A34A;font-size:0.65rem;display:none;">✓ auto-filled</span></label>
+          <input class="addr-field" type="text" id="customer-city" placeholder="Bengaluru" style="margin-bottom:0;" autocomplete="address-level2">
         </div>
       </div>
     </div>
 
-    <button class="proceed-btn" id="proceed-btn" onclick="proceedToPayment()">Proceed to Pay →</button>
-    <button onclick="closePhoneModal()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;margin-top:0.75rem;cursor:pointer;width:100%;">Cancel</button>
+    <button class="proceed-btn" id="proceed-btn" onclick="proceedToPayment()">🔒 Pay ₹<span id="proceed-amount"></span> Securely</button>
+    <button onclick="closePhoneModal()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;margin-top:0.6rem;cursor:pointer;width:100%;">Cancel</button>
   </div>
 </div>
 
@@ -444,14 +455,35 @@
   let pendingProduct = null;
   let pendingAmount  = null;
 
+  async function autoFillCity(pincode) {
+    if (pincode.length !== 6) return;
+    try {
+      const res  = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+      const data = await res.json();
+      if (data[0]?.Status === 'Success') {
+        const place = data[0].PostOffice[0];
+        const city  = place.District || place.Division || place.Name;
+        const cityEl = document.getElementById('customer-city');
+        cityEl.value = city;
+        cityEl.classList.add('city-auto');
+        document.getElementById('city-auto-label').style.display = 'inline';
+      }
+    } catch(e) {}
+  }
+
   function startPayment(productName, amountPaise) {
     pendingProduct = productName;
     pendingAmount  = amountPaise;
     document.getElementById('phone-modal-product-line').textContent =
       `${productName} — ₹${(amountPaise/100).toLocaleString('en-IN')}`;
+    document.getElementById('proceed-amount').textContent =
+      (amountPaise/100).toLocaleString('en-IN');
     ['customer-name','customer-phone','customer-address','customer-city','customer-pincode'].forEach(id => {
-      document.getElementById(id).value = '';
+      const el = document.getElementById(id);
+      el.value = '';
+      el.classList.remove('city-auto');
     });
+    document.getElementById('city-auto-label').style.display = 'none';
     document.getElementById('phone-modal-overlay').classList.add('show');
     setTimeout(() => document.getElementById('customer-name').focus(), 300);
   }
