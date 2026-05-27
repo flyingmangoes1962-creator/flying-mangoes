@@ -161,6 +161,7 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
     <div class="nav-item active" onclick="showPanel('dashboard')" id="nav-dashboard"><span class="nav-icon">📊</span> Dashboard</div>
     <div class="nav-item" onclick="showPanel('orders')" id="nav-orders"><span class="nav-icon">🧾</span> Orders</div>
     <div class="nav-item" onclick="showPanel('inventory')" id="nav-inventory"><span class="nav-icon">📦</span> Inventory</div>
+    <div class="nav-item" onclick="showPanel('intelligence')" id="nav-intelligence"><span class="nav-icon">🧠</span> Intelligence</div>
     <div class="nav-section">Content</div>
     <div class="nav-item" onclick="showPanel('hero')" id="nav-hero"><span class="nav-icon">🏠</span> Hero Section</div>
     <div class="nav-item" onclick="showPanel('story')" id="nav-story"><span class="nav-icon">📖</span> Our Story</div>
@@ -213,11 +214,35 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
           <span class="edit-card-icon">🧾</span>
           <span class="edit-card-title">Order History</span>
           <span class="edit-card-desc" id="orders-count-label">Loading…</span>
-          <button class="icon-btn" onclick="renderOrders()" style="margin-left:auto;">↻ Refresh</button>
+          <button class="icon-btn" onclick="exportCSV()" style="margin-left:auto;">⬇ Export CSV</button>
+          <button class="icon-btn" onclick="renderOrders()" style="margin-left:0.5rem;">↻ Refresh</button>
         </div>
         <div id="orders-container">
           <div class="no-data"><span class="no-data-icon">📭</span><div>Loading orders…</div></div>
         </div>
+      </div>
+    </div>
+
+    <!-- ── INTELLIGENCE ── -->
+    <div class="panel" id="panel-intelligence">
+      <div class="stats-row" id="intel-stats-row" style="grid-template-columns:repeat(4,1fr);"></div>
+      <div class="two-col" style="gap:1.5rem;margin-bottom:1.5rem;">
+        <div class="edit-card" style="margin-bottom:0;">
+          <div class="edit-card-header"><span class="edit-card-icon">🥭</span><span class="edit-card-title">Revenue by Product</span></div>
+          <div id="intel-by-product"></div>
+        </div>
+        <div class="edit-card" style="margin-bottom:0;">
+          <div class="edit-card-header"><span class="edit-card-icon">📍</span><span class="edit-card-title">Top Cities</span></div>
+          <div id="intel-by-city"></div>
+        </div>
+      </div>
+      <div class="edit-card">
+        <div class="edit-card-header">
+          <span class="edit-card-icon">👥</span>
+          <span class="edit-card-title">All Customers</span>
+          <button class="icon-btn" onclick="exportCSV()" style="margin-left:auto;">⬇ Export CSV</button>
+        </div>
+        <div id="intel-customers"></div>
       </div>
     </div>
 
@@ -407,19 +432,21 @@ function showPanel(id) {
   document.getElementById('panel-' + id).classList.add('active');
   document.getElementById('nav-' + id).classList.add('active');
   const titles = {
-    dashboard: 'Dashboard <span>— Overview</span>',
-    orders:    'Orders <span>— Payment history</span>',
-    inventory: 'Inventory <span>— Stock &amp; availability</span>',
-    hero:      'Hero Section <span>— Edit headline &amp; text</span>',
-    story:     'Our Story <span>— Edit brand narrative</span>',
-    products:  'Products <span>— Edit listings &amp; photos</span>',
-    values:    'Why Us <span>— Edit value props</span>',
-    settings:  'Settings <span>— Brand &amp; CTA config</span>',
+    dashboard:    'Dashboard <span>— Overview</span>',
+    orders:       'Orders <span>— Payment history &amp; customer details</span>',
+    inventory:    'Inventory <span>— Stock &amp; availability</span>',
+    intelligence: 'Intelligence <span>— Analytics &amp; customer data</span>',
+    hero:         'Hero Section <span>— Edit headline &amp; text</span>',
+    story:        'Our Story <span>— Edit brand narrative</span>',
+    products:     'Products <span>— Edit listings &amp; photos</span>',
+    values:       'Why Us <span>— Edit value props</span>',
+    settings:     'Settings <span>— Brand &amp; CTA config</span>',
   };
   document.getElementById('topbar-title').innerHTML = titles[id] || id;
-  if (id === 'inventory') renderInventory();
-  if (id === 'orders')    renderOrders();
-  if (id === 'dashboard') updateDashboardStats();
+  if (id === 'inventory')    renderInventory();
+  if (id === 'orders')       renderOrders();
+  if (id === 'intelligence') renderIntelligence();
+  if (id === 'dashboard')    updateDashboardStats();
 }
 
 // ── DASHBOARD STATS ────────────────────────────────────────────────────────
@@ -579,28 +606,139 @@ function renderOrders() {
     <div class="orders-summary">
       <div class="orders-summary-item">Total orders: <strong>${orders.length}</strong></div>
       <div class="orders-summary-item">Revenue: <strong style="color:#2E7D32;">₹${(total/100).toLocaleString('en-IN')}</strong></div>
+      <div class="orders-summary-item">Avg order: <strong>₹${(total/100/orders.length).toLocaleString('en-IN',{maximumFractionDigits:0})}</strong></div>
       <div class="orders-summary-item">Latest: <strong>${new Date(orders[0].timestamp).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</strong></div>
     </div>
     <div style="overflow-x:auto;">
       <table class="orders-table">
         <thead>
-          <tr><th>#</th><th>Date &amp; Time</th><th>Product</th><th>Amount</th><th>Customer</th><th>Payment ID</th></tr>
+          <tr><th>#</th><th>Date &amp; Time</th><th>Product</th><th>Amount</th><th>Customer</th><th>Delivery Address</th><th>Payment ID</th><th>Action</th></tr>
         </thead>
         <tbody>
           ${orders.map((o, i) => {
             const dt = new Date(o.timestamp);
+            const phone = (o.customerPhone || '').replace('+91','');
+            const addr = [o.address, o.city, o.pincode].filter(Boolean).join(', ') || '—';
+            const waMsg = encodeURIComponent(`Hi ${o.customerName || 'there'}! 🥭 Your Flying Mangoes order for *${o.product}* has been confirmed. Payment ID: ${o.paymentId}. We'll dispatch within 24 hours. Thank you!`);
             return `<tr>
               <td style="color:var(--text-muted);font-size:0.78rem;">#${orders.length - i}</td>
               <td><div>${dt.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</div><div style="font-size:0.73rem;color:var(--text-muted);">${dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}</div></td>
               <td><span class="product-chip">🥭 ${o.product || '—'}</span></td>
               <td class="amount-cell">₹${((o.amount||0)/100).toLocaleString('en-IN')}</td>
-              <td style="font-size:0.82rem;">${o.customerPhone || '—'}</td>
-              <td><span class="pid-chip">${o.paymentId || '—'}</span></td>
+              <td>
+                <div style="font-weight:500;font-size:0.85rem;">${o.customerName || '—'}</div>
+                <div style="font-size:0.78rem;color:var(--text-muted);">${o.customerPhone || '—'}</div>
+              </td>
+              <td style="font-size:0.8rem;max-width:200px;">${addr}</td>
+              <td><span class="pid-chip">${(o.paymentId||'—').substring(0,16)}…</span></td>
+              <td>
+                ${phone ? `<a href="https://wa.me/91${phone}?text=${waMsg}" target="_blank" style="background:#25D366;color:white;border:none;padding:0.3rem 0.75rem;border-radius:2rem;font-size:0.75rem;font-weight:500;cursor:pointer;text-decoration:none;display:inline-block;">💬 WhatsApp</a>` : '—'}
+              </td>
             </tr>`;
           }).join('')}
         </tbody>
       </table>
     </div>`;
+}
+
+// ── INTELLIGENCE ────────────────────────────────────────────────────────────
+function renderIntelligence() {
+  const orders = loadOrders();
+  const total  = orders.reduce((s, o) => s + (o.amount || 0), 0);
+  const avgVal = orders.length ? total / orders.length : 0;
+
+  // Stats
+  document.getElementById('intel-stats-row').innerHTML = `
+    <div class="stat-card"><div class="num">${orders.length}</div><div class="lbl">Total Orders</div></div>
+    <div class="stat-card"><div class="num" style="color:#2E7D32;">₹${(total/100).toLocaleString('en-IN')}</div><div class="lbl">Total Revenue</div></div>
+    <div class="stat-card"><div class="num">₹${(avgVal/100).toLocaleString('en-IN',{maximumFractionDigits:0})}</div><div class="lbl">Avg Order Value</div></div>
+    <div class="stat-card"><div class="num">${new Set(orders.map(o => o.customerPhone)).size}</div><div class="lbl">Unique Customers</div></div>
+  `;
+
+  // Revenue by product
+  const byProduct = {};
+  orders.forEach(o => {
+    const key = o.product || 'Unknown';
+    byProduct[key] = byProduct[key] || { count: 0, revenue: 0 };
+    byProduct[key].count++;
+    byProduct[key].revenue += o.amount || 0;
+  });
+  const prodEntries = Object.entries(byProduct).sort((a,b) => b[1].revenue - a[1].revenue);
+  const maxRev = prodEntries[0]?.[1].revenue || 1;
+  document.getElementById('intel-by-product').innerHTML = prodEntries.length
+    ? prodEntries.map(([name, d]) => `
+        <div style="margin-bottom:1rem;">
+          <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.3rem;">
+            <span style="font-weight:500;">🥭 ${name}</span>
+            <span style="color:#2E7D32;font-weight:600;">₹${(d.revenue/100).toLocaleString('en-IN')} · ${d.count} order${d.count>1?'s':''}</span>
+          </div>
+          <div style="background:#F0EBE3;border-radius:2rem;height:8px;overflow:hidden;">
+            <div style="background:var(--mango);height:100%;width:${Math.round(d.revenue/maxRev*100)}%;border-radius:2rem;transition:width 0.5s;"></div>
+          </div>
+        </div>`).join('')
+    : '<div style="color:var(--text-muted);font-size:0.85rem;padding:1rem 0;">No orders yet.</div>';
+
+  // Top cities
+  const byCity = {};
+  orders.forEach(o => {
+    const key = o.city || 'Unknown';
+    byCity[key] = (byCity[key] || 0) + 1;
+  });
+  const cityEntries = Object.entries(byCity).sort((a,b) => b[1]-a[1]).slice(0,8);
+  document.getElementById('intel-by-city').innerHTML = cityEntries.length
+    ? `<table style="width:100%;border-collapse:collapse;font-size:0.84rem;">
+        <thead><tr><th style="text-align:left;padding:0.4rem 0;color:var(--text-muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;border-bottom:1.5px solid var(--border);">City</th><th style="text-align:right;padding:0.4rem 0;color:var(--text-muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;border-bottom:1.5px solid var(--border);">Orders</th></tr></thead>
+        <tbody>${cityEntries.map(([city,count]) => `<tr><td style="padding:0.6rem 0;border-bottom:1px solid var(--border);">📍 ${city}</td><td style="text-align:right;padding:0.6rem 0;border-bottom:1px solid var(--border);font-weight:600;">${count}</td></tr>`).join('')}</tbody>
+      </table>`
+    : '<div style="color:var(--text-muted);font-size:0.85rem;padding:1rem 0;">No city data yet — collected once customers place orders with address.</div>';
+
+  // Full customer list
+  document.getElementById('intel-customers').innerHTML = orders.length
+    ? `<div style="overflow-x:auto;"><table class="orders-table">
+        <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>City</th><th>Pincode</th><th>Product</th><th>Amount</th><th>Date</th></tr></thead>
+        <tbody>${orders.map((o,i) => {
+          const phone = (o.customerPhone||'').replace('+91','');
+          const waMsg = encodeURIComponent(`Hi ${o.customerName||'there'}! 🥭`);
+          return `<tr>
+            <td style="color:var(--text-muted);">#${orders.length-i}</td>
+            <td style="font-weight:500;">${o.customerName||'—'}</td>
+            <td>${phone ? `<a href="https://wa.me/91${phone}?text=${waMsg}" target="_blank" style="color:var(--mango);text-decoration:none;">📱 ${o.customerPhone}</a>` : '—'}</td>
+            <td>${o.city||'—'}</td>
+            <td>${o.pincode||'—'}</td>
+            <td><span class="product-chip">🥭 ${o.product||'—'}</span></td>
+            <td class="amount-cell">₹${((o.amount||0)/100).toLocaleString('en-IN')}</td>
+            <td style="font-size:0.78rem;color:var(--text-muted);">${new Date(o.timestamp).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table></div>`
+    : '<div class="no-data"><span class="no-data-icon">👥</span><div>Customer data will appear here after first order.</div></div>';
+}
+
+// ── CSV EXPORT ──────────────────────────────────────────────────────────────
+function exportCSV() {
+  const orders = loadOrders();
+  if (!orders.length) { showToast('No orders to export yet'); return; }
+  const headers = ['Order #','Date','Product','Amount (₹)','Customer Name','Phone','Address','City','Pincode','Payment ID','Order ID'];
+  const rows = orders.map((o, i) => [
+    orders.length - i,
+    new Date(o.timestamp).toLocaleString('en-IN'),
+    o.product || '',
+    ((o.amount||0)/100).toFixed(2),
+    o.customerName || '',
+    o.customerPhone || '',
+    o.address || '',
+    o.city || '',
+    o.pincode || '',
+    o.paymentId || '',
+    o.orderId || ''
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = `flying-mangoes-orders-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+  showToast('✅ CSV exported!');
 }
 
 // ── SAVE ALL (content changes) ─────────────────────────────────────────────
