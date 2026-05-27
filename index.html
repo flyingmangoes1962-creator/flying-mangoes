@@ -80,6 +80,8 @@
   .product-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem; }
   .product-footer { display: flex; align-items: center; justify-content: space-between; }
   .product-price { font-size: 1.1rem; font-weight: 500; color: var(--mango-dark); }
+  .product-price-orig { font-size: 0.82rem; color: #AAA; text-decoration: line-through; margin-right: 4px; }
+  .product-offer-tag { display: inline-block; background: #E8F5E9; color: #2E7D32; font-size: 0.68rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 2rem; margin-bottom: 0.4rem; letter-spacing: 0.03em; }
   .product-price span { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
 
   /* PAY BUTTON */
@@ -355,10 +357,10 @@
 <script>
   // ── Product defaults (fallback if admin hasn't saved yet) ──────────────
   const DEFAULT_PRODUCTS = [
-    { id:1, name:'The Classic Dozen',  desc:'12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.', price:'₹699',   priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:'images/mangoes-closeup.jpg', pricePaise:69900,  stock:50, inStock:true },
-    { id:2, name:'The Family Box',     desc:'24 mixed mangoes — Alphonso & Kesar. For the family that eats together and argues over the best variety.', price:'₹1,199', priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/mango-tree.jpg',     pricePaise:119900, stock:30, inStock:true },
-    { id:3, name:"Thatha's Reserve",   desc:'6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.', price:'₹799',   priceUnit:'/ box', badge:'Limited',    emoji:'✨', img:'images/thatha-farm.jpg',    pricePaise:79900,  stock:10, inStock:true },
-    { id:4, name:'Gift a Harvest',     desc:'Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.', price:'₹899',   priceUnit:'/ box', badge:'',           emoji:'🎁', img:'images/orchard.jpg',        pricePaise:89900,  stock:20, inStock:true }
+    { id:1, name:'The Classic Dozen',  desc:'12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.', price:'₹699',   origPrice:'₹999',  offerLabel:'Introductory Offer', priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:'images/mangoes-closeup.jpg', pricePaise:69900,  stock:50, inStock:true },
+    { id:2, name:'The Family Box',     desc:'24 mixed mangoes — Alphonso & Kesar. For the family that eats together and argues over the best variety.', price:'₹1,199', origPrice:'₹1,599', offerLabel:'Launch Price',        priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/mango-tree.jpg',     pricePaise:119900, stock:30, inStock:true },
+    { id:3, name:"Thatha's Reserve",   desc:'6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.', price:'₹799',   origPrice:'₹1,099', offerLabel:'Limited Season',      priceUnit:'/ box', badge:'Limited',    emoji:'✨', img:'images/thatha-farm.jpg',    pricePaise:79900,  stock:10, inStock:true },
+    { id:4, name:'Gift a Harvest',     desc:'Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.', price:'₹899',   origPrice:'₹1,199', offerLabel:'Early Bird',          priceUnit:'/ box', badge:'',           emoji:'🎁', img:'images/orchard.jpg',        pricePaise:89900,  stock:20, inStock:true }
   ];
   const IMG_BG = ['product-img-1','product-img-2','product-img-3','product-img-4'];
 
@@ -411,8 +413,12 @@
           <div class="product-info">
             <div class="product-name">${p.name}</div>
             <div class="product-desc">${p.desc}</div>
+            ${p.offerLabel ? `<div class="product-offer-tag">🏷️ ${p.offerLabel}</div>` : ''}
             <div class="product-footer">
-              <div class="product-price">${p.price} <span>${p.priceUnit}</span></div>
+              <div class="product-price">
+                ${p.origPrice ? `<span class="product-price-orig">${p.origPrice}</span>` : ''}
+                ${p.price} <span>${p.priceUnit}</span>
+              </div>
               ${soldOut
                 ? `<button class="pay-btn" disabled>Sold Out</button>`
                 : `<button class="pay-btn" onclick="startPayment('${nameEsc}', ${p.pricePaise || 0})"><span class="upi-icon">💳</span> Pay via UPI</button>`}
