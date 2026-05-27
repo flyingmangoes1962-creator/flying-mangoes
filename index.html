@@ -367,7 +367,19 @@
   function loadProducts() {
     try {
       const saved = JSON.parse(localStorage.getItem('flyingMangoesSiteData') || '{}');
-      if (saved.products && saved.products.length) return saved.products;
+      if (saved.products && saved.products.length) {
+        // Merge: saved data wins for stock/price/name, but always use defaults for offer fields & images
+        return DEFAULT_PRODUCTS.map((def, i) => {
+          const sp = saved.products[i] || {};
+          return {
+            ...def,
+            ...sp,
+            img:        def.img,        // always use committed image paths
+            origPrice:  def.origPrice,  // always show the slashed price
+            offerLabel: def.offerLabel  // always show the offer label
+          };
+        });
+      }
     } catch(e) {}
     return DEFAULT_PRODUCTS;
   }
