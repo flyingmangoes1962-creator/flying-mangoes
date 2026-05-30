@@ -163,6 +163,49 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
 .assign-select { width: 100%; padding: 0.65rem 0.9rem; border: 1px solid var(--border); border-radius: 0.5rem; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; margin-bottom: 1rem; outline: none; }
 .assign-btns { display: flex; gap: 0.75rem; }
 
+/* ── PRODUCTS PANEL ── */
+.prod-toolbar { display: flex; align-items: center; justify-content: space-between; background: white; border-radius: 1rem; padding: 1rem 1.5rem; border: 1px solid var(--border); margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem; }
+.prod-toolbar-stats { display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; color: var(--text-muted); flex-wrap: wrap; }
+.prod-stat-chip { padding: 0.2rem 0.65rem; border-radius: 2rem; font-size: 0.72rem; font-weight: 600; }
+.prod-stat-chip.active   { background: #E8F5E9; color: #2E7D32; }
+.prod-stat-chip.coming   { background: #FFF3E0; color: #E65100; }
+.prod-stat-chip.hidden-c { background: #ECEFF1; color: #546E7A; }
+.prod-section-hdr { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 600; margin-bottom: 0.75rem; margin-top: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
+.prod-section-hdr::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.prod-row { background: white; border-radius: 0.75rem; border: 1px solid var(--border); padding: 0.85rem 1.25rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; transition: box-shadow 0.15s; }
+.prod-row:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.prod-row-thumb { width: 44px; height: 44px; border-radius: 0.5rem; overflow: hidden; flex-shrink: 0; background: var(--mango-light); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+.prod-row-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.prod-row-info { flex: 1; min-width: 0; }
+.prod-row-name { font-weight: 500; font-size: 0.9rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prod-row-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+.prod-row-price { font-weight: 600; color: var(--mango-dark); font-size: 0.88rem; white-space: nowrap; flex-shrink: 0; }
+.prod-row-stock { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; min-width: 56px; text-align: right; }
+.status-badge { padding: 0.2rem 0.6rem; border-radius: 2rem; font-size: 0.67rem; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+.status-badge.active      { background: #E8F5E9; color: #2E7D32; }
+.status-badge.coming-soon { background: #FFF3E0; color: #E65100; }
+.status-badge.hidden      { background: #ECEFF1; color: #546E7A; }
+.prod-row-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+.prod-action-btn { width: 32px; height: 32px; border-radius: 0.45rem; border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: all 0.15s; }
+.prod-action-btn:hover        { border-color: var(--mango); background: var(--mango-light); }
+.prod-action-btn.danger:hover { border-color: #E53935; background: #FFEBEE; }
+/* Add/Edit Modal */
+.prod-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 500; display: none; align-items: flex-start; justify-content: center; padding: 2rem 1rem; overflow-y: auto; }
+.prod-modal-overlay.open { display: flex; }
+.prod-modal { background: white; border-radius: 1.25rem; max-width: 660px; width: 100%; box-shadow: 0 24px 80px rgba(0,0,0,0.2); margin: auto; }
+.prod-modal-header { padding: 1.5rem 2rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; border-radius: 1.25rem 1.25rem 0 0; }
+.prod-modal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+.prod-modal-close { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: white; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: all 0.15s; }
+.prod-modal-close:hover { background: #FFEBEE; border-color: #E53935; color: #E53935; }
+.prod-modal-body { padding: 1.5rem 2rem; }
+.prod-modal-footer { padding: 1.25rem 2rem; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 0.75rem; justify-content: flex-end; border-radius: 0 0 1.25rem 1.25rem; }
+.modal-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+.modal-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.85rem; }
+.cancel-btn { background: none; border: 1px solid var(--border); color: var(--text-muted); padding: 0.55rem 1.25rem; border-radius: 2rem; font-size: 0.85rem; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s; }
+.cancel-btn:hover { border-color: var(--text); color: var(--text); }
+.field-hint { font-size: 0.68rem; color: var(--text-muted); margin-top: 3px; }
+.modal-section-divider { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 600; margin: 1.25rem 0 0.85rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+
 /* TOAST */
 .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--leaf); color: white; padding: 0.75rem 1.25rem; border-radius: 0.75rem; font-size: 0.875rem; z-index: 999; transform: translateY(100px); opacity: 0; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; max-width: 320px; }
 .toast.show { transform: translateY(0); opacity: 1; }
@@ -345,6 +388,15 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
         </div>
         <div id="intel-customers"></div>
       </div>
+      <div class="edit-card">
+        <div class="edit-card-header">
+          <span class="edit-card-icon">🔔</span>
+          <span class="edit-card-title">Notify-Me Signups</span>
+          <span class="edit-card-desc">People who asked to be notified about coming-soon products</span>
+          <button class="icon-btn" onclick="exportNotifCSV()" style="margin-left:auto;">⬇ Export CSV</button>
+        </div>
+        <div id="intel-notifications"></div>
+      </div>
     </div>
 
     <!-- ── INVENTORY ── -->
@@ -419,13 +471,170 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
 
     <!-- ── PRODUCTS ── -->
     <div class="panel" id="panel-products">
-      <div class="edit-card" style="margin-bottom:1.5rem;">
-        <div class="edit-card-header"><span class="edit-card-icon">🥭</span><span class="edit-card-title">Products Section Header</span></div>
-        <div class="field-group"><label class="field-label">Section Label</label><input class="field-input" id="prod-section-label" value="This Season's Harvest" oninput="markChange('Products section label')"></div>
-        <div class="field-group"><label class="field-label">Section Headline</label><input class="field-input" id="prod-section-h2" value="Fresh from the farm, straight to your door." oninput="markChange('Products section headline')"></div>
-        <div class="field-group"><label class="field-label">Section Description</label><textarea class="field-textarea" id="prod-section-desc" oninput="markChange('Products section description')">Hand-picked at peak ripeness. Packed with care. Every box carries three generations of knowing exactly when a mango is ready.</textarea></div>
+      <!-- Toolbar -->
+      <div class="prod-toolbar">
+        <div class="prod-toolbar-stats">
+          <span id="prod-total-lbl" style="font-weight:500;color:var(--text);">Loading…</span>
+          <span class="prod-stat-chip active"   id="prod-active-lbl">0 active</span>
+          <span class="prod-stat-chip coming"   id="prod-coming-lbl">0 coming soon</span>
+          <span class="prod-stat-chip hidden-c" id="prod-hidden-lbl" style="display:none;">0 hidden</span>
+        </div>
+        <button class="save-btn" onclick="openProductModal()">+ Add Product</button>
       </div>
-      <div class="products-edit-grid" id="products-grid-admin"></div>
+      <!-- Product list -->
+      <div id="product-list-admin"></div>
+      <!-- Section copy (collapsible) -->
+      <details class="edit-card" style="margin-top:1.5rem;">
+        <summary style="cursor:pointer;font-weight:500;font-size:0.9rem;color:var(--text-muted);list-style:none;display:flex;align-items:center;gap:8px;">
+          <span>📝</span> Section Copy (headline &amp; description shown on storefront)
+        </summary>
+        <div style="margin-top:1rem;">
+          <div class="field-group"><label class="field-label">Section Label</label><input class="field-input" id="prod-section-label" value="This Season's Harvest" oninput="markChange('Products section label')"></div>
+          <div class="field-group"><label class="field-label">Section Headline</label><input class="field-input" id="prod-section-h2" value="Fresh from the farm, straight to your door." oninput="markChange('Products section headline')"></div>
+          <div class="field-group"><label class="field-label">Section Description</label><textarea class="field-textarea" id="prod-section-desc" oninput="markChange('Products section description')">Hand-picked at peak ripeness. Packed with care. Every box carries three generations of knowing exactly when a mango is ready.</textarea></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- ── PRODUCT ADD/EDIT MODAL ── -->
+    <div class="prod-modal-overlay" id="prod-modal-overlay">
+      <div class="prod-modal">
+        <div class="prod-modal-header">
+          <h3 id="prod-modal-title">Add Product</h3>
+          <button class="prod-modal-close" onclick="closeProductModal()">✕</button>
+        </div>
+        <div class="prod-modal-body">
+          <input type="hidden" id="modal-prod-id">
+          <!-- Status + Category -->
+          <div class="modal-grid-2">
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Status</label>
+              <select class="field-input" id="modal-status">
+                <option value="active">🟢 Active — Available to buy</option>
+                <option value="coming-soon">🕐 Coming Soon — Shows as preview</option>
+                <option value="hidden">⚫ Hidden — Not shown</option>
+              </select>
+            </div>
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Category / Produce</label>
+              <select class="field-input" id="modal-category">
+                <option value="mango">🥭 Mango (Alphonso / Kesar)</option>
+                <option value="sapota">🍂 Sapota (Chikoo)</option>
+                <option value="jamun">🫐 Jamun (Indian Blackberry)</option>
+                <option value="jackfruit">🍈 Jackfruit</option>
+                <option value="seasonal-mix">🌿 Seasonal Mix</option>
+                <option value="other">📦 Other</option>
+              </select>
+            </div>
+          </div>
+          <!-- Name + Badge -->
+          <div class="modal-grid-2" style="margin-top:0.85rem;">
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Product Name</label>
+              <input class="field-input" id="modal-name" placeholder="e.g. The Classic Dozen">
+            </div>
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Badge Label</label>
+              <select class="field-input" id="modal-badge">
+                <option value="">None</option>
+                <option value="Bestseller">Bestseller</option>
+                <option value="New">New</option>
+                <option value="Limited">Limited</option>
+                <option value="Sale">Sale</option>
+                <option value="Organic">Organic</option>
+                <option value="Seasonal">Seasonal</option>
+              </select>
+            </div>
+          </div>
+          <!-- Description -->
+          <div class="field-group" style="margin-top:0.85rem;">
+            <label class="field-label">Description</label>
+            <textarea class="field-textarea" id="modal-desc" style="min-height:80px;" placeholder="Compelling description of the produce…"></textarea>
+          </div>
+          <!-- Emoji + Season + Highlight -->
+          <div class="modal-grid-3" style="margin-top:0.85rem;">
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Emoji</label>
+              <input class="field-input" id="modal-emoji" placeholder="🥭" style="font-size:1.2rem;">
+            </div>
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Season</label>
+              <select class="field-input" id="modal-season">
+                <option value="Summer">Summer (Mar–Jun)</option>
+                <option value="Monsoon">Monsoon (Jul–Sep)</option>
+                <option value="Winter">Winter (Oct–Feb)</option>
+                <option value="Year-round">Year-round</option>
+              </select>
+            </div>
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Opens / Highlight</label>
+              <input class="field-input" id="modal-highlight" placeholder="Opens Oct 2026">
+              <div class="field-hint">Shown on coming-soon card</div>
+            </div>
+          </div>
+          <div class="modal-section-divider">Pricing</div>
+          <div class="modal-grid-3">
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Display Price</label>
+              <input class="field-input" id="modal-price" placeholder="₹699">
+            </div>
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Original (crossed out)</label>
+              <input class="field-input" id="modal-orig-price" placeholder="₹999">
+            </div>
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Price Unit</label>
+              <input class="field-input" id="modal-price-unit" placeholder="/ box" value="/ box">
+            </div>
+          </div>
+          <div class="modal-grid-2" style="margin-top:0.85rem;">
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Razorpay Amount (paise)</label>
+              <input class="field-input" id="modal-paise" type="number" min="0" placeholder="69900">
+              <div class="field-hint">₹699 = 69900 paise. 0 = payment disabled (use for coming-soon)</div>
+            </div>
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Offer Label</label>
+              <input class="field-input" id="modal-offer-label" placeholder="Introductory Offer">
+            </div>
+          </div>
+          <div class="modal-section-divider">Inventory</div>
+          <div class="modal-grid-2">
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Stock Quantity</label>
+              <input class="field-input" id="modal-stock" type="number" min="0" placeholder="50">
+            </div>
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">Availability</label>
+              <select class="field-input" id="modal-instock">
+                <option value="true">✅ In Stock</option>
+                <option value="false">❌ Sold Out / Not Available</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-section-divider">Product Image</div>
+          <div class="field-group">
+            <label class="field-label">Image URL</label>
+            <input class="field-input" id="modal-img-url" placeholder="https://… or images/mangoes-closeup.jpg">
+            <div class="field-hint">Paste any public image URL, or use a path from the Photos panel</div>
+          </div>
+          <div style="text-align:center;margin-top:0.75rem;font-size:0.8rem;color:var(--text-muted);">— or upload from device —</div>
+          <div style="margin-top:0.6rem;position:relative;">
+            <div class="upload-area" style="padding:1rem;">
+              <input type="file" accept="image/*" id="modal-file-input" onchange="handleModalImageUpload(event)" style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:1;">
+              <div style="font-size:0.9rem;color:var(--text-muted);">📷 Click to upload (max 3MB)</div>
+            </div>
+            <div id="modal-img-preview-wrap" style="display:none;margin-top:0.75rem;text-align:center;">
+              <img id="modal-img-preview" src="" style="height:120px;border-radius:0.75rem;object-fit:cover;max-width:100%;">
+              <button onclick="clearModalImage()" style="display:block;margin:0.4rem auto 0;font-size:0.72rem;color:#E53935;background:none;border:none;cursor:pointer;">✕ Remove</button>
+            </div>
+          </div>
+        </div>
+        <div class="prod-modal-footer">
+          <button class="cancel-btn" onclick="closeProductModal()">Cancel</button>
+          <button class="save-btn" onclick="saveProductFromModal()">💾 Save Product</button>
+        </div>
+      </div>
     </div>
 
     <!-- ── VALUES ── -->
@@ -463,13 +672,38 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
 <div class="toast" id="toast"></div>
 
 <script>
-// ── DATA ─────────────────────────────────────────────────────────────────
-const products = [
-  { id:1, name:'The Classic Dozen',  desc:'12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.',                                              price:'₹699',   priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:'images/mangoes-closeup.jpg', pricePaise:69900,  stock:50, inStock:true },
-  { id:2, name:'The Family Box',     desc:'24 mixed mangoes — Alphonso & Kesar. For the family that eats together and argues over the best variety.',                                 price:'₹1,199', priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/mango-tree.jpg',     pricePaise:119900, stock:30, inStock:true },
-  { id:3, name:"Thatha's Reserve",   desc:'6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.',                               price:'₹799',   priceUnit:'/ box', badge:'Limited',    emoji:'✨', img:'images/thatha-farm.jpg',    pricePaise:79900,  stock:10, inStock:true },
-  { id:4, name:'Gift a Harvest',     desc:'Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.',                                  price:'₹899',   priceUnit:'/ box', badge:'',           emoji:'🎁', img:'images/orchard.jpg',        pricePaise:89900,  stock:20, inStock:true }
+// ── CATALOG DEFAULTS (source of truth for first load) ─────────────────────
+const DEFAULT_PRODUCTS = [
+  // ── Active — Mango Season ──────────────────────────────────────────────────
+  { id:1, name:'The Classic Dozen',   desc:'12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.',                                                                           price:'₹699',   origPrice:'₹999',   offerLabel:'Introductory Offer', priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:'images/mangoes-closeup.jpg', pricePaise:69900,  stock:50, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
+  { id:2, name:'The Family Box',      desc:'24 mixed mangoes — Alphonso & Kesar. For the family that eats together and argues over the best variety.',                                                             price:'₹1,199', origPrice:'₹1,599', offerLabel:'Launch Price',        priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/mango-tree.jpg',     pricePaise:119900, stock:30, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
+  { id:3, name:"Thatha's Reserve",    desc:'6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.',                                                            price:'₹799',   origPrice:'₹1,099', offerLabel:'Limited Season',      priceUnit:'/ box', badge:'Limited',    emoji:'✨', img:'images/thatha-farm.jpg',    pricePaise:79900,  stock:10, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
+  { id:4, name:'Gift a Harvest',      desc:'Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.',                                                              price:'₹899',   origPrice:'₹1,199', offerLabel:'Early Bird',          priceUnit:'/ box', badge:'',           emoji:'🎁', img:'images/orchard.jpg',        pricePaise:89900,  stock:20, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
+  // ── Coming Soon ────────────────────────────────────────────────────────────
+  { id:5, name:'Chikoo (Sapota) Box', desc:'The brown fruit with a caramel heart. Our second love after the mango — slow-grown, intensely sweet, deeply nourishing.',                                             price:'₹549',   origPrice:'₹699',   offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🍂', img:'',                          pricePaise:54900,  stock:0,  inStock:false, status:'coming-soon', category:'sapota',    season:'Monsoon',  highlight:'Opens October 2026' },
+  { id:6, name:'Jamun Season Box',    desc:'Ink-dark, tart, alive. The fruit of the monsoon. Known to balance blood sugar, beloved by every Indian grandmother for generations.',                                  price:'₹399',   origPrice:'₹549',   offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🫐', img:'',                          pricePaise:39900,  stock:0,  inStock:false, status:'coming-soon', category:'jamun',     season:'Monsoon',  highlight:'Opens July 2026' },
+  { id:7, name:'Royal Jackfruit',     desc:'The largest fruit on earth. One jackfruit feeds a family. Ours are grown slow, cut fresh, and sent whole — the way Thatha always intended.',                          price:'₹899',   origPrice:'₹1,199', offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🍈', img:'',                          pricePaise:89900,  stock:0,  inStock:false, status:'coming-soon', category:'jackfruit', season:'Summer',   highlight:'Opens June 2027' },
 ];
+
+function loadStoredProducts() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('flyingMangoesSiteData') || '{}');
+    if (saved.products && saved.products.length) {
+      // Normalize existing products — add any new fields introduced in this version
+      const existing = saved.products.map(p => ({
+        status: 'active', category: 'mango', season: 'Summer', highlight: '',
+        origPrice: '', offerLabel: '', ...p
+      }));
+      // Append any new default products not yet in saved data (matched by id)
+      const existingIds = new Set(existing.map(p => p.id));
+      DEFAULT_PRODUCTS.forEach(def => { if (!existingIds.has(def.id)) existing.push({...def}); });
+      return existing;
+    }
+  } catch(e) {}
+  return DEFAULT_PRODUCTS.map(p => ({...p}));
+}
+
+let products = loadStoredProducts();
 
 const values = [
   { id:1, icon:'🌱', title:'Truly Organic',          text:"Not certified by a committee — proven by 62 years of farming without a single chemical. The soil tells the truth." },
@@ -488,9 +722,7 @@ function loadOrders() {
 function loadFromStorage() {
   try {
     const saved = JSON.parse(localStorage.getItem('flyingMangoesSiteData') || '{}');
-    if (saved.products && saved.products.length) {
-      saved.products.forEach((sp, i) => { if (products[i]) Object.assign(products[i], sp); });
-    }
+    // Products are loaded via loadStoredProducts() at startup — skip index-based merge here
     if (saved.values && saved.values.length) {
       saved.values.forEach((sv, i) => { if (values[i]) Object.assign(values[i], sv); });
     }
@@ -540,7 +772,7 @@ function showPanel(id) {
     photos:       'Photos <span>— Upload &amp; manage site images</span>',
     hero:         'Hero Section <span>— Edit headline &amp; text</span>',
     story:        'Our Story <span>— Edit brand narrative</span>',
-    products:     'Products <span>— Edit listings &amp; photos</span>',
+    products:     'Products <span>— Full catalog management</span>',
     values:       'Why Us <span>— Edit value props</span>',
     settings:     'Settings <span>— Brand &amp; CTA config</span>',
   };
@@ -550,6 +782,7 @@ function showPanel(id) {
   if (id === 'intelligence') renderIntelligence();
   if (id === 'dashboard')    updateDashboardStats();
   if (id === 'photos')       { renderPhotoLibrary(); renderPhotoSlots(); }
+  if (id === 'products')     renderProductList();
 }
 
 // ── DASHBOARD STATS ────────────────────────────────────────────────────────
@@ -571,67 +804,192 @@ function updateHeroPreview() {
   document.getElementById('preview-sub').textContent = sub.substring(0, 120) + (sub.length > 120 ? '…' : '');
 }
 
-// ── PRODUCTS (content edit) ────────────────────────────────────────────────
-function renderProductsAdmin() {
-  const grid = document.getElementById('products-grid-admin');
-  grid.innerHTML = products.map(p => `
-    <div class="product-edit-card">
-      <div class="img-upload-zone ${p.img ? 'has-image' : ''}" onclick="triggerUpload(${p.id})">
-        <img class="upload-preview ${p.img ? 'visible' : ''}" id="preview-${p.id}" src="${p.img || ''}" alt="">
-        <div class="upload-placeholder" id="placeholder-${p.id}" style="${p.img ? 'display:none' : ''}">
-          <span class="upload-icon">${p.emoji}</span>
-          <div class="upload-text">Click to upload photo</div>
-          <div class="upload-sub">PNG, JPG up to 5MB</div>
-        </div>
-        <div class="upload-overlay">📷 Change Photo</div>
-        <input type="file" accept="image/*" id="file-${p.id}" style="display:none" onchange="handleUpload(event,${p.id})">
+// ── PRODUCTS CATALOG MANAGEMENT ───────────────────────────────────────────
+const CATEGORY_LABELS = { mango:'🥭 Mango', sapota:'🍂 Sapota', jamun:'🫐 Jamun', jackfruit:'🍈 Jackfruit', 'seasonal-mix':'🌿 Seasonal Mix', other:'📦 Other' };
+
+function renderProductList() {
+  const list = document.getElementById('product-list-admin');
+  const active     = products.filter(p => p.status === 'active');
+  const comingSoon = products.filter(p => p.status === 'coming-soon');
+  const hidden     = products.filter(p => p.status === 'hidden');
+
+  // Update toolbar stats
+  document.getElementById('prod-total-lbl').textContent  = products.length + ' products';
+  document.getElementById('prod-active-lbl').textContent  = active.length + ' active';
+  document.getElementById('prod-coming-lbl').textContent  = comingSoon.length + ' coming soon';
+  document.getElementById('prod-hidden-lbl').textContent  = hidden.length + ' hidden';
+  document.getElementById('prod-hidden-lbl').style.display = hidden.length ? '' : 'none';
+
+  function renderRow(p) {
+    const thumb = p.img
+      ? `<div class="prod-row-thumb"><img src="${p.img}" alt=""></div>`
+      : `<div class="prod-row-thumb">${p.emoji || '📦'}</div>`;
+    const statusBadge = `<span class="status-badge ${p.status || 'active'}">${p.status === 'coming-soon' ? '🕐 Coming Soon' : p.status === 'hidden' ? '⚫ Hidden' : '🟢 Active'}</span>`;
+    const cat = CATEGORY_LABELS[p.category] || (p.category || '');
+    return `
+    <div class="prod-row" id="prod-row-${p.id}">
+      ${thumb}
+      <div class="prod-row-info">
+        <div class="prod-row-name">${escHtml(p.name)}</div>
+        <div class="prod-row-meta">${cat}${p.season ? ' · ' + p.season : ''}${p.highlight ? ' · ' + p.highlight : ''}</div>
       </div>
-      <div class="product-edit-body">
-        <div class="product-badge-row">
-          <select class="badge-select" onchange="products[${p.id-1}].badge=this.value;markChange('Product ${p.id} badge')">
-            ${['','Bestseller','New','Limited','Sale','Organic','Seasonal'].map(b => `<option ${p.badge===b?'selected':''}>${b}</option>`).join('')}
-          </select>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Product Name</label>
-          <input class="field-input" value="${p.name}" oninput="products[${p.id-1}].name=this.value;markChange('Product ${p.id} name')">
-        </div>
-        <div class="field-group">
-          <label class="field-label">Description</label>
-          <textarea class="field-textarea" style="min-height:70px;" oninput="products[${p.id-1}].desc=this.value;markChange('Product ${p.id} desc')">${p.desc}</textarea>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-          <div class="field-group" style="margin-bottom:0;">
-            <label class="field-label">Display Price</label>
-            <input class="field-input" value="${p.price}" placeholder="₹699" oninput="products[${p.id-1}].price=this.value;markChange('Product ${p.id} price')">
-          </div>
-          <div class="field-group" style="margin-bottom:0;">
-            <label class="field-label">Unit</label>
-            <input class="field-input" value="${p.priceUnit}" oninput="products[${p.id-1}].priceUnit=this.value;markChange('Product ${p.id} unit')">
-          </div>
-        </div>
-        <div class="field-group" style="margin-top:0.75rem;">
-          <label class="field-label">Razorpay Amount (paise) <span style="font-size:0.68rem;color:var(--text-muted);text-transform:none;font-weight:400;">₹699 = 69900</span></label>
-          <input class="field-input" type="number" min="100" value="${p.pricePaise || 0}" oninput="products[${p.id-1}].pricePaise=parseInt(this.value)||0;markChange('Product ${p.id} pricePaise')">
-        </div>
+      <div class="prod-row-price">${p.price || '—'}${p.origPrice ? ` <span style="text-decoration:line-through;color:#AAA;font-size:0.75rem;font-weight:400;">${p.origPrice}</span>` : ''}</div>
+      <div class="prod-row-stock">Stock: <strong>${p.stock ?? 0}</strong></div>
+      ${statusBadge}
+      <div class="prod-row-actions">
+        <button class="prod-action-btn" onclick="openProductModal(${p.id})" title="Edit">✏️</button>
+        <button class="prod-action-btn danger" onclick="confirmDeleteProduct(${p.id})" title="Delete">🗑</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }
+
+  let html = '';
+  if (active.length) {
+    html += `<div class="prod-section-hdr">🟢 Active — Available to buy</div>`;
+    html += active.map(renderRow).join('');
+  }
+  if (comingSoon.length) {
+    html += `<div class="prod-section-hdr">🕐 Coming Soon — Shown as previews on storefront</div>`;
+    html += comingSoon.map(renderRow).join('');
+  }
+  if (hidden.length) {
+    html += `<div class="prod-section-hdr">⚫ Hidden — Not shown anywhere</div>`;
+    html += hidden.map(renderRow).join('');
+  }
+  if (!products.length) {
+    html = `<div class="no-data"><span class="no-data-icon">📦</span>No products yet. Click "+ Add Product" to get started.</div>`;
+  }
+  list.innerHTML = html;
 }
 
-function triggerUpload(id) { document.getElementById('file-' + id).click(); }
+function escHtml(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
-function handleUpload(event, id) {
-  const file = event.target.files[0]; if (!file) return;
+// ── MODAL STATE ───────────────────────────────────────────────────────────
+let _modalImgDataUrl = null; // base64 from file upload in modal
+
+function openProductModal(id) {
+  const overlay = document.getElementById('prod-modal-overlay');
+  document.getElementById('prod-modal-title').textContent = id ? 'Edit Product' : 'Add Product';
+  _modalImgDataUrl = null;
+  document.getElementById('modal-img-preview-wrap').style.display = 'none';
+  document.getElementById('modal-file-input').value = '';
+
+  const p = id ? products.find(x => x.id === id) : null;
+  document.getElementById('modal-prod-id').value      = p ? p.id : '';
+  document.getElementById('modal-status').value       = p ? (p.status || 'active') : 'active';
+  document.getElementById('modal-category').value     = p ? (p.category || 'mango') : 'mango';
+  document.getElementById('modal-name').value         = p ? (p.name || '') : '';
+  document.getElementById('modal-badge').value        = p ? (p.badge || '') : '';
+  document.getElementById('modal-desc').value         = p ? (p.desc || '') : '';
+  document.getElementById('modal-emoji').value        = p ? (p.emoji || '') : '';
+  document.getElementById('modal-season').value       = p ? (p.season || 'Summer') : 'Summer';
+  document.getElementById('modal-highlight').value    = p ? (p.highlight || '') : '';
+  document.getElementById('modal-price').value        = p ? (p.price || '') : '';
+  document.getElementById('modal-orig-price').value   = p ? (p.origPrice || '') : '';
+  document.getElementById('modal-price-unit').value   = p ? (p.priceUnit || '/ box') : '/ box';
+  document.getElementById('modal-paise').value        = p ? (p.pricePaise || 0) : 0;
+  document.getElementById('modal-offer-label').value  = p ? (p.offerLabel || '') : '';
+  document.getElementById('modal-stock').value        = p ? (p.stock ?? 0) : 0;
+  document.getElementById('modal-instock').value      = p ? String(p.inStock !== false) : 'true';
+  document.getElementById('modal-img-url').value      = p ? (p.img && !p.img.startsWith('data:') ? p.img : '') : '';
+
+  // Show existing image if it's a data URL
+  if (p && p.img && p.img.startsWith('data:')) {
+    _modalImgDataUrl = p.img;
+    document.getElementById('modal-img-preview').src = p.img;
+    document.getElementById('modal-img-preview-wrap').style.display = 'block';
+  }
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProductModal() {
+  document.getElementById('prod-modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleModalImageUpload(e) {
+  const file = e.target.files[0]; if (!file) return;
+  if (file.size > 3.5 * 1024 * 1024) { showToast('⚠️ Image is over 3MB — quality will be reduced.'); }
   const reader = new FileReader();
-  reader.onload = e => {
-    const img = document.getElementById('preview-' + id);
-    img.src = e.target.result; img.classList.add('visible');
-    document.getElementById('placeholder-' + id).style.display = 'none';
-    products[id-1].img = e.target.result;
-    markChange('Product ' + id + ' photo');
-    showToast('📸 Photo uploaded!');
+  reader.onload = ev => {
+    _modalImgDataUrl = ev.target.result;
+    document.getElementById('modal-img-preview').src = ev.target.result;
+    document.getElementById('modal-img-preview-wrap').style.display = 'block';
+    document.getElementById('modal-img-url').value = '';
+    showToast('📸 Image ready!');
   };
   reader.readAsDataURL(file);
+}
+
+function clearModalImage() {
+  _modalImgDataUrl = null;
+  document.getElementById('modal-img-preview-wrap').style.display = 'none';
+  document.getElementById('modal-img-url').value = '';
+  document.getElementById('modal-file-input').value = '';
+}
+
+function saveProductFromModal() {
+  const name = document.getElementById('modal-name').value.trim();
+  if (!name) { showToast('⚠️ Product name is required.'); return; }
+
+  const idRaw = document.getElementById('modal-prod-id').value;
+  const isNew  = !idRaw;
+  const id     = isNew ? (Math.max(0, ...products.map(p => p.id)) + 1) : parseInt(idRaw);
+
+  const imgUrl  = document.getElementById('modal-img-url').value.trim();
+  const imgFinal = _modalImgDataUrl || imgUrl || '';
+
+  const updated = {
+    id,
+    name,
+    desc:       document.getElementById('modal-desc').value.trim(),
+    price:      document.getElementById('modal-price').value.trim(),
+    origPrice:  document.getElementById('modal-orig-price').value.trim(),
+    offerLabel: document.getElementById('modal-offer-label').value.trim(),
+    priceUnit:  document.getElementById('modal-price-unit').value.trim() || '/ box',
+    pricePaise: parseInt(document.getElementById('modal-paise').value) || 0,
+    badge:      document.getElementById('modal-badge').value,
+    emoji:      document.getElementById('modal-emoji').value.trim() || '📦',
+    img:        imgFinal,
+    stock:      parseInt(document.getElementById('modal-stock').value) || 0,
+    inStock:    document.getElementById('modal-instock').value === 'true',
+    status:     document.getElementById('modal-status').value,
+    category:   document.getElementById('modal-category').value,
+    season:     document.getElementById('modal-season').value,
+    highlight:  document.getElementById('modal-highlight').value.trim(),
+  };
+
+  if (isNew) {
+    products.push(updated);
+  } else {
+    const idx = products.findIndex(p => p.id === id);
+    if (idx >= 0) products[idx] = updated; else products.push(updated);
+  }
+
+  autoSaveStock();
+  renderProductList();
+  renderInventory();
+  updateDashboardStats();
+  closeProductModal();
+  markChange((isNew ? 'Added' : 'Edited') + ' product: ' + name);
+  showToast(isNew ? '✅ Product added!' : '✅ Product updated!');
+}
+
+function confirmDeleteProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`Delete "${p.name}"?\n\nThis removes it from the catalog and the storefront.`)) return;
+  products = products.filter(x => x.id !== id);
+  autoSaveStock();
+  renderProductList();
+  renderInventory();
+  updateDashboardStats();
+  markChange('Deleted product: ' + p.name);
+  showToast('🗑 Product deleted.');
 }
 
 // ── VALUES ─────────────────────────────────────────────────────────────────
@@ -647,22 +1005,29 @@ function renderValues() {
 
 // ── INVENTORY ──────────────────────────────────────────────────────────────
 function renderInventory() {
-  document.getElementById('inventory-grid').innerHTML = products.map((p, i) => `
-    <div class="stock-card">
-      <div class="stock-emoji">${p.img ? `<img src="${p.img}" style="width:44px;height:44px;object-fit:cover;border-radius:50%;">` : p.emoji}</div>
+  const visible = products.filter(p => p.status !== 'hidden');
+  document.getElementById('inventory-grid').innerHTML = visible.length
+    ? visible.map((p, i) => {
+        const globalIdx = products.indexOf(p);
+        const isComingSoon = p.status === 'coming-soon';
+        return `
+    <div class="stock-card" style="${isComingSoon ? 'opacity:0.7;' : ''}">
+      <div class="stock-emoji">${p.img && !p.img.startsWith('data:') ? `<img src="${p.img}" style="width:44px;height:44px;object-fit:cover;border-radius:50%;">` : p.img && p.img.startsWith('data:') ? `<img src="${p.img}" style="width:44px;height:44px;object-fit:cover;border-radius:50%;">` : p.emoji || '📦'}</div>
       <div class="stock-info">
-        <div class="stock-name">${p.name}</div>
-        <div class="stock-price-lbl">${p.price} ${p.priceUnit} &nbsp;·&nbsp; Razorpay: ₹${((p.pricePaise||0)/100).toLocaleString('en-IN')}</div>
+        <div class="stock-name">${escHtml(p.name)}${isComingSoon ? ' <span style="font-size:0.68rem;color:#E65100;font-weight:600;background:#FFF3E0;padding:0.1rem 0.4rem;border-radius:2rem;">Coming Soon</span>' : ''}</div>
+        <div class="stock-price-lbl">${p.price || '—'} ${p.priceUnit || ''} &nbsp;·&nbsp; ${p.pricePaise ? 'Razorpay: ₹' + ((p.pricePaise)/100).toLocaleString('en-IN') : 'Payment disabled'}</div>
       </div>
       <div class="stock-controls">
-        <button class="stock-btn" onclick="adjustStock(${i},-1)" title="Remove 1">−</button>
-        <div class="stock-num" id="sn-${i}">${p.stock ?? 0}</div>
-        <button class="stock-btn" onclick="adjustStock(${i},+1)" title="Add 1">+</button>
-        <button class="stock-toggle ${p.inStock ? 'in-stock' : 'out-stock'}" id="st-${i}" onclick="toggleStock(${i})">
+        <button class="stock-btn" onclick="adjustStock(${globalIdx},-1)" title="Remove 1">−</button>
+        <div class="stock-num" id="sn-${globalIdx}">${p.stock ?? 0}</div>
+        <button class="stock-btn" onclick="adjustStock(${globalIdx},+1)" title="Add 1">+</button>
+        <button class="stock-toggle ${p.inStock ? 'in-stock' : 'out-stock'}" id="st-${globalIdx}" onclick="toggleStock(${globalIdx})">
           ${p.inStock ? '✅ In Stock' : '❌ Sold Out'}
         </button>
       </div>
-    </div>`).join('');
+    </div>`;
+      }).join('')
+    : `<div class="no-data"><span class="no-data-icon">📦</span>No products yet.</div>`;
 }
 
 function adjustStock(idx, delta) {
@@ -795,6 +1160,25 @@ function renderIntelligence() {
       </table>`
     : '<div style="color:var(--text-muted);font-size:0.85rem;padding:1rem 0;">No city data yet — collected once customers place orders with address.</div>';
 
+  // Notify-me signups
+  const notifs = (() => { try { return JSON.parse(localStorage.getItem('flyingMangoesNotifications') || '[]'); } catch(e) { return []; } })();
+  document.getElementById('intel-notifications').innerHTML = notifs.length
+    ? `<div style="overflow-x:auto;"><table class="orders-table">
+        <thead><tr><th>Product</th><th>Name</th><th>Phone</th><th>Date</th><th>WhatsApp</th></tr></thead>
+        <tbody>${[...notifs].reverse().map(n => {
+          const phone = (n.phone||'').replace(/\D/g,'');
+          const waMsg = encodeURIComponent(`Hi ${n.name||'there'}! 🌿 Great news — ${n.product} is now available on Flying Mangoes. Order here: https://flyingmangoes.in`);
+          return `<tr>
+            <td><span class="product-chip">${n.product||'—'}</span></td>
+            <td style="font-weight:500;">${n.name||'—'}</td>
+            <td>${n.phone||'—'}</td>
+            <td style="font-size:0.78rem;color:var(--text-muted);">${new Date(n.timestamp).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</td>
+            <td>${phone ? `<a href="https://wa.me/91${phone}?text=${waMsg}" target="_blank" class="icon-btn" style="color:#25D366;">📲 Notify</a>` : '—'}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table></div>`
+    : '<div class="no-data" style="padding:1.5rem 0;"><span class="no-data-icon" style="font-size:1.8rem;margin-bottom:0.5rem;">🔔</span><div>No signups yet — they appear when visitors click "Notify Me" on coming-soon products.</div></div>';
+
   // Full customer list
   document.getElementById('intel-customers').innerHTML = orders.length
     ? `<div style="overflow-x:auto;"><table class="orders-table">
@@ -818,6 +1202,20 @@ function renderIntelligence() {
 }
 
 // ── CSV EXPORT ──────────────────────────────────────────────────────────────
+function exportNotifCSV() {
+  const notifs = (() => { try { return JSON.parse(localStorage.getItem('flyingMangoesNotifications') || '[]'); } catch(e) { return []; } })();
+  if (!notifs.length) { showToast('No notification signups yet'); return; }
+  const headers = ['Product','Name','Phone','Date'];
+  const rows = notifs.map(n => [n.product||'', n.name||'', n.phone||'', new Date(n.timestamp).toLocaleString('en-IN')]);
+  const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = `flying-mangoes-notify-signups-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+  showToast('✅ Signups exported!');
+}
+
 function exportCSV() {
   const orders = loadOrders();
   if (!orders.length) { showToast('No orders to export yet'); return; }
@@ -1051,9 +1449,12 @@ function showToast(msg) {
 
 // ── INIT ───────────────────────────────────────────────────────────────────
 loadFromStorage();
-renderProductsAdmin();
 renderValues();
 updateDashboardStats();
+// Close product modal on overlay click
+document.getElementById('prod-modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeProductModal();
+});
 </script>
 </body>
 </html>

@@ -196,6 +196,39 @@
   .step-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
   .step-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
 
+  /* COMING SOON SECTION */
+  .coming-soon-section { background: #FFFBF4; padding: 4rem 3rem; border-top: 1px solid rgba(245,130,10,0.1); }
+  .coming-soon-header { text-align: center; margin-bottom: 2.5rem; }
+  .coming-soon-header h2 { font-size: clamp(1.5rem,3vw,2rem); color: var(--text); margin-bottom: 0.5rem; }
+  .coming-soon-header p { color: var(--text-muted); font-size: 0.95rem; }
+  .coming-soon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; max-width: 960px; margin: 0 auto; }
+  .cs-card { background: white; border-radius: 1.25rem; border: 1.5px dashed rgba(245,130,10,0.3); overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+  .cs-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(245,130,10,0.1); }
+  .cs-card-top { padding: 2rem 1.5rem 1rem; display: flex; align-items: flex-start; justify-content: space-between; background: linear-gradient(135deg,#FFFBF4,#FFF3E0); }
+  .cs-emoji { font-size: 3.5rem; line-height: 1; }
+  .cs-season-pill { background: rgba(245,130,10,0.12); color: var(--mango-dark); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.7rem; border-radius: 2rem; white-space: nowrap; margin-top: 0.25rem; }
+  .cs-card-body { padding: 1.25rem 1.5rem 1.5rem; }
+  .cs-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+  .cs-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 0.85rem; }
+  .cs-when { font-size: 0.75rem; color: var(--mango-dark); font-weight: 600; background: #FFF3E0; display: inline-block; padding: 0.2rem 0.6rem; border-radius: 2rem; margin-bottom: 0.85rem; }
+  .cs-price-row { display: flex; align-items: baseline; gap: 5px; margin-bottom: 1rem; }
+  .cs-orig-price { font-size: 0.78rem; color: #AAA; text-decoration: line-through; }
+  .cs-price { font-size: 1.05rem; font-weight: 600; color: var(--mango-dark); }
+  .cs-unit { font-size: 0.75rem; color: var(--text-muted); }
+  .cs-notify-btn { width: 100%; padding: 0.65rem 1rem; border-radius: 2rem; border: 1.5px solid var(--mango); background: white; color: var(--mango-dark); font-size: 0.82rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; }
+  .cs-notify-btn:hover { background: var(--mango); color: white; }
+  /* Notify Me Modal */
+  .notify-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 600; display: none; align-items: center; justify-content: center; padding: 1.5rem; }
+  .notify-modal-overlay.open { display: flex; }
+  .notify-modal { background: white; border-radius: 1.25rem; max-width: 400px; width: 100%; padding: 2rem; box-shadow: 0 24px 80px rgba(0,0,0,0.2); text-align: center; }
+  .notify-modal h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 0.4rem; }
+  .notify-modal p  { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6; }
+  .notify-input { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid rgba(245,130,10,0.3); border-radius: 2rem; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; margin-bottom: 0.75rem; outline: none; text-align: center; }
+  .notify-input:focus { border-color: var(--mango); }
+  .notify-submit-btn { width: 100%; padding: 0.75rem; border-radius: 2rem; background: var(--mango); color: white; border: none; font-size: 0.95rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; margin-bottom: 0.6rem; transition: background 0.2s; }
+  .notify-submit-btn:hover { background: var(--mango-dark); }
+  .notify-skip-btn { background: none; border: none; font-size: 0.8rem; color: var(--text-muted); cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
   /* GALLERY SECTION */
   .gallery-section { background: var(--leaf); padding: 4rem 3rem; }
   .gallery-header { text-align: center; margin-bottom: 2rem; }
@@ -272,6 +305,10 @@
     /* PRODUCTS */
     .products-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
     .products-header { margin-bottom: 2rem; }
+
+    /* COMING SOON */
+    .coming-soon-section { padding: 3rem 1.25rem; }
+    .coming-soon-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
 
     /* JOURNEY */
     .journey-steps { grid-template-columns: 1fr 1fr; gap: 1.75rem; }
@@ -420,6 +457,16 @@
   <div class="products-grid" id="products-grid">
     <!-- Rendered dynamically from admin inventory -->
   </div>
+</section>
+
+<!-- COMING SOON SECTION — rendered dynamically, hidden when empty -->
+<section class="coming-soon-section" id="coming-soon-section" style="display:none;">
+  <div class="coming-soon-header">
+    <div class="section-label" style="color:var(--mango);">Beyond Mangoes</div>
+    <h2>More from the farm — coming your way.</h2>
+    <p>The same soil, the same patience, different fruits of the season. Be first in line.</p>
+  </div>
+  <div class="coming-soon-grid" id="coming-soon-grid"></div>
 </section>
 
 <!-- FARM TO DOOR JOURNEY -->
@@ -623,6 +670,19 @@
   </div>
 </div>
 
+<!-- NOTIFY ME MODAL (Coming Soon products) -->
+<div class="notify-modal-overlay" id="notify-modal-overlay">
+  <div class="notify-modal">
+    <div style="font-size:2rem;margin-bottom:0.5rem;">🔔</div>
+    <h3 id="notify-modal-product">Get Notified</h3>
+    <p>Leave your phone number and we'll WhatsApp you as soon as <span id="notify-product-name">this</span> is available.</p>
+    <input class="notify-input" type="tel" id="notify-phone" placeholder="Your WhatsApp number" maxlength="15">
+    <input class="notify-input" type="text" id="notify-name" placeholder="Your name (optional)" style="margin-top:0.5rem;">
+    <button class="notify-submit-btn" onclick="submitNotify()">🙋 Count Me In!</button>
+    <button class="notify-skip-btn" onclick="closeNotifyModal()">No thanks, I'll check back later</button>
+  </div>
+</div>
+
 <!-- SUCCESS MODAL -->
 <div class="modal-overlay" id="success-modal">
   <div class="modal">
@@ -643,10 +703,15 @@
 <script>
   // ── Product defaults (fallback if admin hasn't saved yet) ──────────────
   const DEFAULT_PRODUCTS = [
-    { id:1, name:'The Classic Dozen',  desc:'12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.', price:'₹699',   origPrice:'₹999',  offerLabel:'Introductory Offer', priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:'images/mangoes-closeup.jpg', pricePaise:69900,  stock:50, inStock:true },
-    { id:2, name:'The Family Box',     desc:'24 mixed mangoes — Alphonso & Kesar. For the family that eats together and argues over the best variety.', price:'₹1,199', origPrice:'₹1,599', offerLabel:'Launch Price',        priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/mango-tree.jpg',     pricePaise:119900, stock:30, inStock:true },
-    { id:3, name:"Thatha's Reserve",   desc:'6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.', price:'₹799',   origPrice:'₹1,099', offerLabel:'Limited Season',      priceUnit:'/ box', badge:'Limited',    emoji:'✨', img:'images/thatha-farm.jpg',    pricePaise:79900,  stock:10, inStock:true },
-    { id:4, name:'Gift a Harvest',     desc:'Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.', price:'₹899',   origPrice:'₹1,199', offerLabel:'Early Bird',          priceUnit:'/ box', badge:'',           emoji:'🎁', img:'images/orchard.jpg',        pricePaise:89900,  stock:20, inStock:true }
+    // ── Active — Mango Season ───────────────────────────────────────────────
+    { id:1, name:'The Classic Dozen',   desc:'12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.',                                                                           price:'₹699',   origPrice:'₹999',   offerLabel:'Introductory Offer', priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:'images/mangoes-closeup.jpg', pricePaise:69900,  stock:50, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
+    { id:2, name:'The Family Box',      desc:'24 mixed mangoes — Alphonso & Kesar. For the family that eats together and argues over the best variety.',                                                             price:'₹1,199', origPrice:'₹1,599', offerLabel:'Launch Price',        priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/mango-tree.jpg',     pricePaise:119900, stock:30, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
+    { id:3, name:"Thatha's Reserve",    desc:'6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.',                                                            price:'₹799',   origPrice:'₹1,099', offerLabel:'Limited Season',      priceUnit:'/ box', badge:'Limited',    emoji:'✨', img:'images/thatha-farm.jpg',    pricePaise:79900,  stock:10, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
+    { id:4, name:'Gift a Harvest',      desc:'Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.',                                                              price:'₹899',   origPrice:'₹1,199', offerLabel:'Early Bird',          priceUnit:'/ box', badge:'',           emoji:'🎁', img:'images/orchard.jpg',        pricePaise:89900,  stock:20, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
+    // ── Coming Soon ─────────────────────────────────────────────────────────
+    { id:5, name:'Chikoo (Sapota) Box', desc:'The brown fruit with a caramel heart. Our second love after the mango — slow-grown, intensely sweet, deeply nourishing.',                                             price:'₹549',   origPrice:'₹699',   offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🍂', img:'',                          pricePaise:54900,  stock:0,  inStock:false, status:'coming-soon', category:'sapota',    season:'Monsoon',  highlight:'Opens October 2026' },
+    { id:6, name:'Jamun Season Box',    desc:'Ink-dark, tart, alive. The fruit of the monsoon. Known to balance blood sugar, beloved by every Indian grandmother for generations.',                                  price:'₹399',   origPrice:'₹549',   offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🫐', img:'',                          pricePaise:39900,  stock:0,  inStock:false, status:'coming-soon', category:'jamun',     season:'Monsoon',  highlight:'Opens July 2026' },
+    { id:7, name:'Royal Jackfruit',     desc:'The largest fruit on earth. One jackfruit feeds a family. Ours are grown slow, cut fresh, and sent whole — the way Thatha always intended.',                          price:'₹899',   origPrice:'₹1,199', offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🍈', img:'',                          pricePaise:89900,  stock:0,  inStock:false, status:'coming-soon', category:'jackfruit', season:'Summer',   highlight:'Opens June 2027' },
   ];
   const IMG_BG = ['product-img-1','product-img-2','product-img-3','product-img-4'];
 
@@ -654,17 +719,15 @@
     try {
       const saved = JSON.parse(localStorage.getItem('flyingMangoesSiteData') || '{}');
       if (saved.products && saved.products.length) {
-        // Merge: saved data wins for stock/price/name, but always use defaults for offer fields & images
-        return DEFAULT_PRODUCTS.map((def, i) => {
-          const sp = saved.products[i] || {};
-          return {
-            ...def,
-            ...sp,
-            img:        def.img,        // always use committed image paths
-            origPrice:  def.origPrice,  // always show the slashed price
-            offerLabel: def.offerLabel  // always show the offer label
-          };
-        });
+        // Normalize: ensure all products have the new fields (status, category, season)
+        const existing = saved.products.map(p => ({
+          status: 'active', category: 'mango', season: 'Summer', highlight: '',
+          origPrice: '', offerLabel: '', ...p
+        }));
+        // Append new default products not yet saved (matched by id)
+        const existingIds = new Set(existing.map(p => p.id));
+        DEFAULT_PRODUCTS.forEach(def => { if (!existingIds.has(def.id)) existing.push({...def}); });
+        return existing;
       }
     } catch(e) {}
     return DEFAULT_PRODUCTS;
@@ -694,36 +757,71 @@
   }
 
   function renderProducts() {
-    const products = loadProducts();
+    const allProducts = loadProducts();
+    const active     = allProducts.filter(p => p.status === 'active');
+    const comingSoon = allProducts.filter(p => p.status === 'coming-soon');
+
+    // ── Active products grid ───────────────────────────────────────────────
     const grid = document.getElementById('products-grid');
-    grid.innerHTML = products.map((p, i) => {
-      const soldOut = !p.inStock || p.stock === 0;
-      const imgContent = p.img
-        ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;" alt="${p.name}">`
-        : p.emoji || '🥭';
-      const badgeHtml = soldOut
-        ? `<div class="product-badge" style="background:#888;">Sold Out</div>`
-        : (p.badge ? `<div class="product-badge">${p.badge}</div>` : '');
-      const nameEsc = (p.name || '').replace(/'/g, "\\'");
-      return `
-        <div class="product-card">
-          <div class="product-img ${IMG_BG[i % 4]}">${imgContent}${badgeHtml}</div>
-          <div class="product-info">
-            <div class="product-name">${p.name}</div>
-            <div class="product-desc">${p.desc}</div>
-            ${p.offerLabel ? `<div class="product-offer-tag">🏷️ ${p.offerLabel}</div>` : ''}
-            <div class="product-footer">
-              <div class="product-price">
-                ${p.origPrice ? `<span class="product-price-orig">${p.origPrice}</span>` : ''}
-                ${p.price} <span>${p.priceUnit}</span>
+    if (active.length === 0) {
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--text-muted);"><div style="font-size:2.5rem;margin-bottom:1rem;">🌱</div><p>No products available right now. Check back soon!</p></div>`;
+    } else {
+      grid.innerHTML = active.map((p, i) => {
+        const soldOut = !p.inStock || p.stock === 0;
+        const imgContent = p.img
+          ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;" alt="${p.name}">`
+          : `<span style="font-size:4rem;">${p.emoji || '🥭'}</span>`;
+        const badgeHtml = soldOut
+          ? `<div class="product-badge" style="background:#888;">Sold Out</div>`
+          : (p.badge ? `<div class="product-badge">${p.badge}</div>` : '');
+        const nameEsc = (p.name || '').replace(/'/g, "\\'");
+        return `
+          <div class="product-card">
+            <div class="product-img ${IMG_BG[i % 4]}">${imgContent}${badgeHtml}</div>
+            <div class="product-info">
+              <div class="product-name">${p.name}</div>
+              <div class="product-desc">${p.desc}</div>
+              ${p.offerLabel ? `<div class="product-offer-tag">🏷️ ${p.offerLabel}</div>` : ''}
+              <div class="product-footer">
+                <div class="product-price">
+                  ${p.origPrice ? `<span class="product-price-orig">${p.origPrice}</span>` : ''}
+                  ${p.price} <span>${p.priceUnit}</span>
+                </div>
+                ${soldOut
+                  ? `<button class="pay-btn" disabled>Sold Out</button>`
+                  : `<button class="pay-btn" onclick="startPayment('${nameEsc}', ${p.pricePaise || 0})"><span class="upi-icon">💳</span> Pay via UPI</button>`}
               </div>
-              ${soldOut
-                ? `<button class="pay-btn" disabled>Sold Out</button>`
-                : `<button class="pay-btn" onclick="startPayment('${nameEsc}', ${p.pricePaise || 0})"><span class="upi-icon">💳</span> Pay via UPI</button>`}
             </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── Coming soon section ────────────────────────────────────────────────
+    const csSection = document.getElementById('coming-soon-section');
+    const csGrid    = document.getElementById('coming-soon-grid');
+    if (comingSoon.length > 0 && csSection) {
+      csSection.style.display = '';
+      csGrid.innerHTML = comingSoon.map(p => `
+        <div class="cs-card">
+          <div class="cs-card-top">
+            <div class="cs-emoji">${p.emoji || '🌿'}</div>
+            <div class="cs-season-pill">${p.season || 'Seasonal'}</div>
           </div>
-        </div>`;
-    }).join('');
+          <div class="cs-card-body">
+            <div class="cs-name">${p.name}</div>
+            <div class="cs-desc">${p.desc}</div>
+            ${p.highlight ? `<div class="cs-when">📅 ${p.highlight}</div>` : ''}
+            <div class="cs-price-row">
+              ${p.origPrice ? `<span class="cs-orig-price">${p.origPrice}</span>` : ''}
+              <span class="cs-price">${p.price || ''}</span>
+              <span class="cs-unit">${p.priceUnit || ''}</span>
+            </div>
+            <button class="cs-notify-btn" onclick="openNotifyModal('${(p.name||'').replace(/'/g,"\\'")}')">🔔 Notify Me When Available</button>
+          </div>
+        </div>`).join('');
+    } else if (csSection) {
+      csSection.style.display = 'none';
+    }
   }
 
   // ── Payment flow ────────────────────────────────────────────────────────
@@ -887,6 +985,39 @@
     document.getElementById('hamburger').classList.remove('open');
     document.body.style.overflow = '';
   }
+
+  // ── Notify Me (Coming Soon) ──────────────────────────────────────────────
+  let _notifyProduct = '';
+  function openNotifyModal(productName) {
+    _notifyProduct = productName;
+    document.getElementById('notify-product-name').textContent = productName;
+    document.getElementById('notify-modal-product').textContent = 'Notify me about ' + productName;
+    document.getElementById('notify-phone').value = '';
+    document.getElementById('notify-name').value  = '';
+    document.getElementById('notify-modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeNotifyModal() {
+    document.getElementById('notify-modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function submitNotify() {
+    const phone = document.getElementById('notify-phone').value.trim();
+    const name  = document.getElementById('notify-name').value.trim();
+    if (!phone || phone.length < 7) { alert('Please enter a valid phone number.'); return; }
+    try {
+      const stored = JSON.parse(localStorage.getItem('flyingMangoesNotifications') || '[]');
+      stored.push({ product: _notifyProduct, phone, name, timestamp: new Date().toISOString() });
+      localStorage.setItem('flyingMangoesNotifications', JSON.stringify(stored));
+    } catch(e) {}
+    closeNotifyModal();
+    // Quick WhatsApp fallback
+    const msg = encodeURIComponent(`Hi! I'd like to be notified when ${_notifyProduct} is available on Flying Mangoes. My name is ${name || 'a customer'}.`);
+    setTimeout(() => { window.open(`https://wa.me/91${phone.replace(/\D/g,'')}?text=${msg}`, '_blank'); }, 300);
+  }
+  document.getElementById('notify-modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeNotifyModal();
+  });
 
   // ── Apply Photo Slots from Admin ─────────────────────────────────────────
   function applyPhotoSlots() {
