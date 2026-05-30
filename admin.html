@@ -731,6 +731,7 @@ function loadFromStorage() {
     if (saved.story) { s('story-year',saved.story.year); s('story-since',saved.story.since); s('story-h2',saved.story.h2); s('story-p1',saved.story.p1); s('story-p2',saved.story.p2); s('story-p3',saved.story.p3); }
     if (saved.stats) { s('stat1-num',saved.stats.s1n); s('stat1-lbl',saved.stats.s1l); s('stat2-num',saved.stats.s2n); s('stat2-lbl',saved.stats.s2l); s('stat3-num',saved.stats.s3n); s('stat3-lbl',saved.stats.s3l); s('stat4-num',saved.stats.s4n); s('stat4-lbl',saved.stats.s4l); }
     if (saved.settings) { s('brand-name',saved.settings.brandName); s('brand-tagline',saved.settings.tagline); s('footer-note',saved.settings.footerNote); s('wa-number',saved.settings.waNumber); s('cta-h2',saved.settings.ctaH2); s('cta-sub',saved.settings.ctaSub); }
+    if (saved.productsSection) { s('prod-section-label',saved.productsSection.label); s('prod-section-h2',saved.productsSection.h2); s('prod-section-desc',saved.productsSection.desc); }
   } catch(e) { console.warn('loadFromStorage error', e); }
 }
 
@@ -1425,6 +1426,7 @@ function saveAll() {
     hero: { badge:document.getElementById('hero-badge').value, h1_1:document.getElementById('hero-h1-1').value, h1_2:document.getElementById('hero-h1-2').value, h1_3:document.getElementById('hero-h1-3').value, subtitle:document.getElementById('hero-subtitle').value, btn1:document.getElementById('hero-btn1').value, btn2:document.getElementById('hero-btn2').value, tag1:document.getElementById('tag1').value, tag2:document.getElementById('tag2').value, tag3:document.getElementById('tag3').value },
     story: { year:document.getElementById('story-year').value, since:document.getElementById('story-since').value, h2:document.getElementById('story-h2').value, p1:document.getElementById('story-p1').value, p2:document.getElementById('story-p2').value, p3:document.getElementById('story-p3').value },
     stats: { s1n:document.getElementById('stat1-num').value, s1l:document.getElementById('stat1-lbl').value, s2n:document.getElementById('stat2-num').value, s2l:document.getElementById('stat2-lbl').value, s3n:document.getElementById('stat3-num').value, s3l:document.getElementById('stat3-lbl').value, s4n:document.getElementById('stat4-num').value, s4l:document.getElementById('stat4-lbl').value },
+    productsSection: { label:document.getElementById('prod-section-label').value, h2:document.getElementById('prod-section-h2').value, desc:document.getElementById('prod-section-desc').value },
     products,
     values,
     settings: { brandName:document.getElementById('brand-name').value, tagline:document.getElementById('brand-tagline').value, footerNote:document.getElementById('footer-note').value, waNumber:document.getElementById('wa-number').value, ctaH2:document.getElementById('cta-h2').value, ctaSub:document.getElementById('cta-sub').value }

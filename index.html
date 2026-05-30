@@ -986,6 +986,119 @@
     document.body.style.overflow = '';
   }
 
+  // ── Apply all admin-saved content to the live storefront ──────────────────
+  function applySiteContent() {
+    try {
+      const d = JSON.parse(localStorage.getItem('flyingMangoesSiteData') || '{}');
+
+      // Helper: set text if value is truthy, skip otherwise (keeps HTML default)
+      function setText(el, val) { if (el && val) el.textContent = val; }
+      function setHtml(el, val) { if (el && val) el.innerHTML  = val; }
+      function qs(sel) { return document.querySelector(sel); }
+      function qsa(sel) { return document.querySelectorAll(sel); }
+
+      // ── Hero ───────────────────────────────────────────────────────────
+      if (d.hero) {
+        const h = d.hero;
+        setText(qs('.hero-badge'), h.badge);
+
+        const h1 = qs('.hero h1');
+        if (h1 && (h.h1_1 || h.h1_2 || h.h1_3)) {
+          h1.innerHTML = `${h.h1_1 || 'Mangoes that'}<br><em>${h.h1_2 || 'have been flying'}</em><br>${h.h1_3 || 'since 1962.'}`;
+        }
+        setText(qs('.hero-subtitle'), h.subtitle);
+
+        const btn1 = qs('.hero .btn-primary');
+        const btn2 = qs('.hero .btn-secondary');
+        if (btn1 && h.btn1) btn1.textContent = h.btn1;
+        if (btn2 && h.btn2) btn2.textContent = h.btn2;
+
+        setText(qs('.tag-1'), h.tag1);
+        setText(qs('.tag-2'), h.tag2);
+        setText(qs('.tag-3'), h.tag3);
+      }
+
+      // ── Stats bar ──────────────────────────────────────────────────────
+      if (d.stats) {
+        const s = d.stats;
+        const statEls = qsa('.stats-bar .stat');
+        const data = [[s.s1n,s.s1l],[s.s2n,s.s2l],[s.s3n,s.s3l],[s.s4n,s.s4l]];
+        statEls.forEach((el, i) => {
+          if (!data[i]) return;
+          const num = el.querySelector('.stat-num');
+          const lbl = el.querySelector('.stat-label');
+          setText(num, data[i][0]);
+          setText(lbl, data[i][1]);
+        });
+      }
+
+      // ── Story section ──────────────────────────────────────────────────
+      if (d.story) {
+        const s = d.story;
+        setText(qs('.story-year'),  s.year);
+        setText(qs('.story-since'), s.since);
+        setHtml(qs('.story-text h2'), s.h2 ? s.h2.replace(/\n/g,'<br>') : null);
+        const ps = qsa('.story-text p');
+        if (s.p1 && ps[0]) ps[0].innerHTML = s.p1;
+        if (s.p2 && ps[1]) ps[1].innerHTML = s.p2;
+        if (s.p3 && ps[2]) ps[2].innerHTML = s.p3;
+      }
+
+      // ── Products section header ────────────────────────────────────────
+      if (d.productsSection) {
+        const ps = d.productsSection;
+        const hdr = qs('.products-header');
+        if (hdr) {
+          setText(hdr.querySelector('.section-label'), ps.label);
+          setHtml(hdr.querySelector('h2'), ps.h2 ? ps.h2.replace(/\n/g,'<br>') : null);
+          setText(hdr.querySelector('p'), ps.desc);
+        }
+      }
+
+      // ── Values (Why Us) grid ───────────────────────────────────────────
+      if (d.values && d.values.length) {
+        const grid = qs('.values-grid');
+        if (grid) {
+          grid.innerHTML = d.values.map(v => `
+            <div class="value-card">
+              <div class="value-icon">${v.icon || ''}</div>
+              <div class="value-title">${v.title || ''}</div>
+              <div class="value-text">${v.text || ''}</div>
+            </div>`).join('');
+        }
+      }
+
+      // ── Settings (CTA, footer, brand) ──────────────────────────────────
+      if (d.settings) {
+        const s = d.settings;
+        // CTA section
+        setText(qs('.order-section h2'), s.ctaH2);
+        const ctaP = qs('.order-section .order-content > p:first-of-type');
+        setText(ctaP, s.ctaSub);
+        // Footer
+        const footerTagline = qs('.footer-tagline');
+        setText(footerTagline, s.footerNote);
+        // Brand name (nav + footer)
+        if (s.brandName) {
+          setText(qs('.nav-logo-text'), s.brandName);
+          const footerBrand = qs('.footer-brand');
+          if (footerBrand) footerBrand.innerHTML = '🥭 ' + s.brandName;
+        }
+        // WhatsApp number — update any static wa.me links in footer/CTA
+        if (s.waNumber) {
+          const num = s.waNumber.replace(/\D/g,'');
+          qsa('a[href*="wa.me"]').forEach(a => {
+            // Only update non-dynamically-generated WA links (order/confirm links are built in JS)
+            if (!a.hasAttribute('data-dynamic-wa')) {
+              a.href = a.href.replace(/wa\.me\/\d+/, 'wa.me/' + num);
+            }
+          });
+        }
+      }
+
+    } catch(e) { console.warn('applySiteContent:', e); }
+  }
+
   // ── Notify Me (Coming Soon) ──────────────────────────────────────────────
   let _notifyProduct = '';
   function openNotifyModal(productName) {
@@ -1061,8 +1174,9 @@
   }
 
   // ── Init ────────────────────────────────────────────────────────────────
-  applyPhotoSlots();
-  renderProducts();
+  applySiteContent();   // apply admin-saved hero/story/stats/values/settings
+  applyPhotoSlots();    // apply admin-assigned photos
+  renderProducts();     // render product grid + coming-soon section
 
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
