@@ -130,6 +130,39 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
 .icon-btn { background: none; border: 1px solid var(--border); color: var(--text-muted); padding: 0.3rem 0.8rem; border-radius: 2rem; font-size: 0.76rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
 .icon-btn:hover { border-color: var(--mango); color: var(--mango); }
 
+/* ── PHOTOS PANEL ── */
+.photo-slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.photo-slot { border-radius: 0.75rem; overflow: hidden; border: 1.5px solid var(--border); background: white; }
+.photo-slot-img { height: 140px; position: relative; overflow: hidden; background: var(--mango-light); }
+.photo-slot-img img { width: 100%; height: 100%; object-fit: cover; }
+.photo-slot-label { padding: 0.6rem 0.85rem; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; border-bottom: 1px solid var(--border); }
+.photo-slot-actions { padding: 0.6rem 0.85rem; display: flex; gap: 0.5rem; }
+.slot-btn { flex: 1; padding: 0.4rem 0; border-radius: 0.4rem; border: 1px solid var(--border); font-size: 0.72rem; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; background: white; color: var(--text-muted); transition: all 0.15s; text-align: center; }
+.slot-btn:hover { border-color: var(--mango); color: var(--mango); }
+.slot-btn.primary { background: var(--mango); color: white; border-color: var(--mango); }
+.slot-btn.primary:hover { background: var(--mango-dark); }
+.photo-library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.85rem; }
+.lib-photo { border-radius: 0.75rem; overflow: hidden; border: 1.5px solid var(--border); position: relative; cursor: pointer; }
+.lib-photo img { width: 100%; height: 110px; object-fit: cover; display: block; transition: transform 0.2s; }
+.lib-photo:hover img { transform: scale(1.04); }
+.lib-photo-name { padding: 0.4rem 0.6rem; font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lib-photo-del { position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; font-size: 0.7rem; cursor: pointer; display: none; align-items: center; justify-content: center; line-height: 1; }
+.lib-photo:hover .lib-photo-del { display: flex; }
+.upload-area { border: 2px dashed rgba(245,130,10,0.4); border-radius: 0.75rem; padding: 2rem; text-align: center; background: var(--mango-light); cursor: pointer; transition: all 0.2s; position: relative; }
+.upload-area:hover { border-color: var(--mango); background: #FEF3E2; }
+.upload-area input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.url-row { display: flex; gap: 0.75rem; margin-top: 0.75rem; }
+.url-input { flex: 1; padding: 0.65rem 0.9rem; border: 1px solid var(--border); border-radius: 0.5rem; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; outline: none; }
+.url-input:focus { border-color: var(--mango); }
+/* assign modal */
+.assign-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; display: none; align-items: center; justify-content: center; padding: 1rem; }
+.assign-modal.open { display: flex; }
+.assign-box { background: white; border-radius: 1rem; padding: 1.5rem; max-width: 380px; width: 100%; }
+.assign-box h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 0.5rem; }
+.assign-box img { width: 100%; height: 160px; object-fit: cover; border-radius: 0.5rem; margin-bottom: 1rem; }
+.assign-select { width: 100%; padding: 0.65rem 0.9rem; border: 1px solid var(--border); border-radius: 0.5rem; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; margin-bottom: 1rem; outline: none; }
+.assign-btns { display: flex; gap: 0.75rem; }
+
 /* TOAST */
 .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--leaf); color: white; padding: 0.75rem 1.25rem; border-radius: 0.75rem; font-size: 0.875rem; z-index: 999; transform: translateY(100px); opacity: 0; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; max-width: 320px; }
 .toast.show { transform: translateY(0); opacity: 1; }
@@ -163,6 +196,7 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
     <div class="nav-item" onclick="showPanel('inventory')" id="nav-inventory"><span class="nav-icon">📦</span> Inventory</div>
     <div class="nav-item" onclick="showPanel('intelligence')" id="nav-intelligence"><span class="nav-icon">🧠</span> Intelligence</div>
     <div class="nav-section">Content</div>
+    <div class="nav-item" onclick="showPanel('photos')" id="nav-photos"><span class="nav-icon">📸</span> Photos</div>
     <div class="nav-item" onclick="showPanel('hero')" id="nav-hero"><span class="nav-icon">🏠</span> Hero Section</div>
     <div class="nav-item" onclick="showPanel('story')" id="nav-story"><span class="nav-icon">📖</span> Our Story</div>
     <div class="nav-item" onclick="showPanel('products')" id="nav-products"><span class="nav-icon">🥭</span> Products</div>
@@ -219,6 +253,73 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
         </div>
         <div id="orders-container">
           <div class="no-data"><span class="no-data-icon">📭</span><div>Loading orders…</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PHOTOS ── -->
+    <div class="panel" id="panel-photos">
+
+      <!-- Upload new photo -->
+      <div class="edit-card">
+        <div class="edit-card-header"><span class="edit-card-icon">⬆️</span><span class="edit-card-title">Upload New Photo</span><span class="edit-card-desc">File or paste a URL</span></div>
+        <div class="upload-area" id="upload-area">
+          <input type="file" accept="image/*" multiple onchange="handlePhotoUpload(event)">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">📷</div>
+          <div style="font-size:0.9rem;font-weight:500;color:var(--mango-dark);">Click to upload or drag & drop</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.25rem;">JPG, PNG, WEBP — multiple files OK</div>
+        </div>
+        <div class="url-row">
+          <input class="url-input" type="url" id="photo-url-input" placeholder="Or paste an image URL (from Google Photos, Imgur, etc.)">
+          <input class="url-input" type="text" id="photo-url-name" placeholder="Photo name" style="max-width:160px;">
+          <button class="save-btn" onclick="addPhotoByUrl()" style="white-space:nowrap;">+ Add URL</button>
+        </div>
+      </div>
+
+      <!-- Photo library -->
+      <div class="edit-card">
+        <div class="edit-card-header">
+          <span class="edit-card-icon">🖼️</span>
+          <span class="edit-card-title">Photo Library</span>
+          <span class="edit-card-desc" id="lib-count-lbl"></span>
+          <span style="font-size:0.75rem;color:var(--text-muted);margin-left:auto;">Click any photo to assign it to a section</span>
+        </div>
+        <div class="photo-library-grid" id="photo-library-grid">
+          <div style="color:var(--text-muted);font-size:0.85rem;padding:1rem 0;">Loading library…</div>
+        </div>
+      </div>
+
+      <!-- Site photo slots -->
+      <div class="edit-card">
+        <div class="edit-card-header"><span class="edit-card-icon">🗺️</span><span class="edit-card-title">Where Each Photo Appears</span><span class="edit-card-desc">Click "Change" to swap any photo</span></div>
+        <div class="photo-slots-grid" id="photo-slots-grid"></div>
+      </div>
+
+    </div>
+
+    <!-- Assign modal -->
+    <div class="assign-modal" id="assign-modal">
+      <div class="assign-box">
+        <h4>Assign Photo to Section</h4>
+        <img id="assign-preview" src="" alt="">
+        <select class="assign-select" id="assign-slot-select">
+          <option value="">— Choose a slot —</option>
+          <option value="hero">Hero (main banner image)</option>
+          <option value="storyPortrait">Our Story — Thatha portrait</option>
+          <option value="product1">Product 1 — The Classic Dozen</option>
+          <option value="product2">Product 2 — The Family Box</option>
+          <option value="product3">Product 3 — Thatha's Reserve</option>
+          <option value="product4">Product 4 — Gift a Harvest</option>
+          <option value="gallery1">Gallery photo 1 (large)</option>
+          <option value="gallery2">Gallery photo 2</option>
+          <option value="gallery3">Gallery photo 3</option>
+          <option value="gallery4">Gallery photo 4</option>
+          <option value="gallery5">Gallery photo 5</option>
+          <option value="quoteSection">Quote section background</option>
+        </select>
+        <div class="assign-btns">
+          <button class="save-btn" onclick="confirmAssign()" style="flex:1;">✅ Assign</button>
+          <button class="icon-btn" onclick="closeAssignModal()" style="flex:1;">Cancel</button>
         </div>
       </div>
     </div>
@@ -436,6 +537,7 @@ function showPanel(id) {
     orders:       'Orders <span>— Payment history &amp; customer details</span>',
     inventory:    'Inventory <span>— Stock &amp; availability</span>',
     intelligence: 'Intelligence <span>— Analytics &amp; customer data</span>',
+    photos:       'Photos <span>— Upload &amp; manage site images</span>',
     hero:         'Hero Section <span>— Edit headline &amp; text</span>',
     story:        'Our Story <span>— Edit brand narrative</span>',
     products:     'Products <span>— Edit listings &amp; photos</span>',
@@ -447,6 +549,7 @@ function showPanel(id) {
   if (id === 'orders')       renderOrders();
   if (id === 'intelligence') renderIntelligence();
   if (id === 'dashboard')    updateDashboardStats();
+  if (id === 'photos')       { renderPhotoLibrary(); renderPhotoSlots(); }
 }
 
 // ── DASHBOARD STATS ────────────────────────────────────────────────────────
@@ -739,6 +842,181 @@ function exportCSV() {
   a.href = url; a.download = `flying-mangoes-orders-${new Date().toISOString().slice(0,10)}.csv`;
   a.click(); URL.revokeObjectURL(url);
   showToast('✅ CSV exported!');
+}
+
+// ── PHOTOS ────────────────────────────────────────────────────────────────
+const DEFAULT_SLOTS = {
+  hero:          { label: 'Hero Banner',           src: 'images/mangoes-closeup.jpg' },
+  storyPortrait: { label: 'Thatha Portrait',       src: 'images/thatha-portrait.jpg' },
+  product1:      { label: 'Product 1',             src: 'images/mangoes-closeup.jpg' },
+  product2:      { label: 'Product 2',             src: 'images/mango-tree.jpg' },
+  product3:      { label: 'Product 3',             src: 'images/thatha-farm.jpg' },
+  product4:      { label: 'Product 4',             src: 'images/orchard.jpg' },
+  gallery1:      { label: 'Gallery 1 (large)',     src: 'images/mango-tree.jpg' },
+  gallery2:      { label: 'Gallery 2',             src: 'images/mangoes-closeup.jpg' },
+  gallery3:      { label: 'Gallery 3',             src: 'images/orchard.jpg' },
+  gallery4:      { label: 'Gallery 4',             src: 'images/thatha-farm.jpg' },
+  gallery5:      { label: 'Gallery 5',             src: 'images/thatha-portrait.jpg' },
+  quoteSection:  { label: 'Quote Section BG',      src: 'images/thatha-farm.jpg' },
+};
+
+function loadPhotoData() {
+  try { return JSON.parse(localStorage.getItem('flyingMangoesPhotos') || '{}'); } catch(e) { return {}; }
+}
+function savePhotoData(data) {
+  try { localStorage.setItem('flyingMangoesPhotos', JSON.stringify(data)); } catch(e) {
+    showToast('⚠️ Storage full! Try removing unused photos.'); }
+}
+function getSlotSrc(slot) {
+  const data = loadPhotoData();
+  return (data.slots && data.slots[slot]) ? data.slots[slot] : DEFAULT_SLOTS[slot]?.src;
+}
+function getLibrary() {
+  const data = loadPhotoData();
+  // Always include default farm photos
+  const defaults = [
+    { name: 'Farm photo — Mangoes', src: 'images/mangoes-closeup.jpg', default: true },
+    { name: 'Farm photo — Mango tree', src: 'images/mango-tree.jpg', default: true },
+    { name: 'Farm photo — Orchard', src: 'images/orchard.jpg', default: true },
+    { name: 'Farm photo — Thatha farm', src: 'images/thatha-farm.jpg', default: true },
+    { name: 'Farm photo — Thatha portrait', src: 'images/thatha-portrait.jpg', default: true },
+    { name: 'Logo', src: 'images/logo.png', default: true },
+  ];
+  return [...defaults, ...(data.library || [])];
+}
+
+function renderPhotoLibrary() {
+  const lib = getLibrary();
+  document.getElementById('lib-count-lbl').textContent = `${lib.length} photos`;
+  document.getElementById('photo-library-grid').innerHTML = lib.map((p, i) => `
+    <div class="lib-photo" onclick="openAssignModal('${p.src.replace(/'/g,"\\'")}')">
+      <img src="${p.src}" alt="${p.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'150\\' height=\\'110\\'><rect fill=\\'%23f5f0e8\\'/><text x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'%23aaa\\' font-size=\\'12\\'>No preview</text></svg>'">
+      <div class="lib-photo-name">${p.name}</div>
+      ${!p.default ? `<button class="lib-photo-del" onclick="deleteLibPhoto(event,${i - 6})" title="Delete">✕</button>` : ''}
+    </div>`).join('');
+}
+
+function renderPhotoSlots() {
+  const data = loadPhotoData();
+  const slots = data.slots || {};
+  document.getElementById('photo-slots-grid').innerHTML = Object.entries(DEFAULT_SLOTS).map(([key, def]) => {
+    const src = slots[key] || def.src;
+    return `
+      <div class="photo-slot">
+        <div class="photo-slot-label">${def.label}</div>
+        <div class="photo-slot-img"><img src="${src}" alt="${def.label}"></div>
+        <div class="photo-slot-actions">
+          <button class="slot-btn primary" onclick="openAssignModalForSlot('${key}')">Change Photo</button>
+          ${slots[key] ? `<button class="slot-btn" onclick="resetSlot('${key}')">Reset</button>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function handlePhotoUpload(event) {
+  const files = Array.from(event.target.files);
+  if (!files.length) return;
+  let done = 0;
+  files.forEach(file => {
+    if (file.size > 3 * 1024 * 1024) { showToast(`⚠️ ${file.name} is over 3MB — skipped. Use a URL instead.`); done++; return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      const data = loadPhotoData();
+      if (!data.library) data.library = [];
+      data.library.push({ name: file.name.replace(/\.[^.]+$/, ''), src: e.target.result });
+      savePhotoData(data);
+      done++;
+      if (done === files.length) { renderPhotoLibrary(); showToast(`✅ ${files.length} photo(s) uploaded to library!`); }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function addPhotoByUrl() {
+  const url  = document.getElementById('photo-url-input').value.trim();
+  const name = document.getElementById('photo-url-name').value.trim() || 'Uploaded photo';
+  if (!url) { showToast('Please paste an image URL'); return; }
+  const data = loadPhotoData();
+  if (!data.library) data.library = [];
+  data.library.push({ name, src: url });
+  savePhotoData(data);
+  document.getElementById('photo-url-input').value = '';
+  document.getElementById('photo-url-name').value = '';
+  renderPhotoLibrary();
+  showToast('✅ Photo added to library!');
+}
+
+function deleteLibPhoto(e, idx) {
+  e.stopPropagation();
+  const data = loadPhotoData();
+  data.library.splice(idx, 1);
+  savePhotoData(data);
+  renderPhotoLibrary();
+  showToast('🗑️ Photo removed');
+}
+
+let _assigningSrc  = null;
+let _assigningSlot = null;
+
+function openAssignModal(src) {
+  _assigningSrc  = src;
+  _assigningSlot = null;
+  document.getElementById('assign-preview').src = src;
+  document.getElementById('assign-slot-select').value = '';
+  document.getElementById('assign-modal').classList.add('open');
+}
+
+function openAssignModalForSlot(slot) {
+  _assigningSlot = slot;
+  _assigningSrc  = getSlotSrc(slot);
+  document.getElementById('assign-preview').src = _assigningSrc;
+  document.getElementById('assign-slot-select').value = slot;
+  document.getElementById('assign-modal').classList.add('open');
+}
+
+function closeAssignModal() {
+  document.getElementById('assign-modal').classList.remove('open');
+  _assigningSrc = null; _assigningSlot = null;
+}
+
+function confirmAssign() {
+  const slot = document.getElementById('assign-slot-select').value;
+  if (!slot)         { showToast('Please choose a slot'); return; }
+  if (!_assigningSrc) { showToast('No photo selected');   return; }
+  const data = loadPhotoData();
+  if (!data.slots) data.slots = {};
+  data.slots[slot] = _assigningSrc;
+  savePhotoData(data);
+  closeAssignModal();
+  renderPhotoSlots();
+  renderPhotoLibrary();
+  autoApplyPhotoToSiteData(slot, _assigningSrc);
+  showToast(`✅ Photo assigned to "${DEFAULT_SLOTS[slot]?.label}"! Save Changes to apply.`);
+}
+
+function autoApplyPhotoToSiteData(slot, src) {
+  // Also update the site data so products & gallery pick it up
+  try {
+    const siteData = JSON.parse(localStorage.getItem('flyingMangoesSiteData') || '{}');
+    const map = { product1: 0, product2: 1, product3: 2, product4: 3 };
+    if (map[slot] !== undefined && siteData.products) {
+      siteData.products[map[slot]].img = src;
+      localStorage.setItem('flyingMangoesSiteData', JSON.stringify(siteData));
+    }
+    // Store photo slot assignments for storefront to read
+    const photos = loadPhotoData();
+    const existing = JSON.parse(localStorage.getItem('flyingMangoesSiteData') || '{}');
+    existing.photoSlots = photos.slots || {};
+    localStorage.setItem('flyingMangoesSiteData', JSON.stringify(existing));
+  } catch(e) {}
+}
+
+function resetSlot(slot) {
+  const data = loadPhotoData();
+  if (data.slots) delete data.slots[slot];
+  savePhotoData(data);
+  renderPhotoSlots();
+  showToast(`↩️ Reset to default photo`);
 }
 
 // ── SAVE ALL (content changes) ─────────────────────────────────────────────

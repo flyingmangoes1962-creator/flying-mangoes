@@ -174,7 +174,7 @@
 
   /* THATHA QUOTE */
   .quote-section { background: #F5EDD8; padding: 5rem 3rem; position: relative; overflow: hidden; }
-  .quote-section::before { content: ''; position: absolute; inset: 0; background: url('images/thatha-farm.jpg') center/cover no-repeat; opacity: 0.08; }
+  .quote-section::before { content: none; } /* background handled dynamically by applyPhotoSlots() */
   .quote-inner { max-width: 760px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
   .quote-mark { font-family: 'Cormorant Garamond', serif; font-size: 8rem; color: var(--mango); line-height: 0.5; display: block; margin-bottom: 1rem; opacity: 0.6; }
   .quote-text { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.6rem, 3vw, 2.4rem); font-style: italic; line-height: 1.5; color: var(--soil); margin-bottom: 1.75rem; font-weight: 400; }
@@ -360,7 +360,7 @@
   </div>
   <div class="hero-visual">
     <div style="position:relative;width:100%;max-width:460px;">
-      <img src="images/mangoes-closeup.jpg" alt="Fresh Alphonso Mangoes from the farm" style="width:100%;height:420px;object-fit:cover;border-radius:2rem;box-shadow:0 20px 60px rgba(245,130,10,0.25);">
+      <img id="hero-img" src="images/mangoes-closeup.jpg" alt="Fresh Alphonso Mangoes from the farm" style="width:100%;height:420px;object-fit:cover;border-radius:2rem;box-shadow:0 20px 60px rgba(245,130,10,0.25);">
       <div class="floating-tags">
         <div class="tag tag-1">🌿 Zero Pesticides</div>
         <div class="tag tag-2">🚜 Family Farm Since 1962</div>
@@ -381,7 +381,7 @@
 <section class="story-section" id="story">
   <div class="story-inner">
     <div class="story-meta">
-      <img src="images/thatha-portrait.jpg" alt="Thatha — the founder" style="width:100%;height:280px;object-fit:cover;object-position:center top;border-radius:1.25rem;margin-bottom:1rem;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+      <img id="story-portrait-img" src="images/thatha-portrait.jpg" alt="Thatha — the founder" style="width:100%;height:280px;object-fit:cover;object-position:center top;border-radius:1.25rem;margin-bottom:1rem;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
       <div class="story-year">1962</div>
       <div class="story-since">EST. BY THATHA</div>
     </div>
@@ -461,23 +461,23 @@
   </div>
   <div class="gallery-grid">
     <div class="gallery-img">
-      <img src="images/mango-tree.jpg" alt="Mango trees on the farm">
+      <img id="gallery1-img" src="images/mango-tree.jpg" alt="Mango trees on the farm">
       <div class="gallery-caption"><span>The original trees Thatha planted in 1962</span></div>
     </div>
     <div class="gallery-img">
-      <img src="images/mangoes-closeup.jpg" alt="Fresh Alphonso mangoes">
+      <img id="gallery2-img" src="images/mangoes-closeup.jpg" alt="Fresh Alphonso mangoes">
       <div class="gallery-caption"><span>Alphonso — the king of mangoes</span></div>
     </div>
     <div class="gallery-img">
-      <img src="images/orchard.jpg" alt="The orchard">
+      <img id="gallery3-img" src="images/orchard.jpg" alt="The orchard">
       <div class="gallery-caption"><span>Our one-hectare orchard</span></div>
     </div>
     <div class="gallery-img">
-      <img src="images/thatha-farm.jpg" alt="Thatha on the farm">
+      <img id="gallery4-img" src="images/thatha-farm.jpg" alt="Thatha on the farm">
       <div class="gallery-caption"><span>Thatha walks the farm every morning</span></div>
     </div>
     <div class="gallery-img">
-      <img src="images/thatha-portrait.jpg" alt="Thatha portrait">
+      <img id="gallery5-img" src="images/thatha-portrait.jpg" alt="Thatha portrait">
       <div class="gallery-caption"><span>Three generations of farming</span></div>
     </div>
   </div>
@@ -888,7 +888,49 @@
     document.body.style.overflow = '';
   }
 
+  // ── Apply Photo Slots from Admin ─────────────────────────────────────────
+  function applyPhotoSlots() {
+    try {
+      const photos = JSON.parse(localStorage.getItem('flyingMangoesPhotos') || '{}');
+      const slots  = photos.slots || {};
+      function s(slot, def) { return slots[slot] || def; }
+
+      const heroImg = document.getElementById('hero-img');
+      if (heroImg) heroImg.src = s('hero', 'images/mangoes-closeup.jpg');
+
+      const portrait = document.getElementById('story-portrait-img');
+      if (portrait) portrait.src = s('storyPortrait', 'images/thatha-portrait.jpg');
+
+      const galleryDef = [
+        'images/mango-tree.jpg',
+        'images/mangoes-closeup.jpg',
+        'images/orchard.jpg',
+        'images/thatha-farm.jpg',
+        'images/thatha-portrait.jpg'
+      ];
+      for (let i = 1; i <= 5; i++) {
+        const el = document.getElementById('gallery' + i + '-img');
+        if (el) el.src = s('gallery' + i, galleryDef[i - 1]);
+      }
+
+      // Quote section bg overlay (subtle, 8% opacity)
+      const quoteSrc = s('quoteSection', 'images/thatha-farm.jpg');
+      const qs = document.querySelector('.quote-section');
+      if (qs) {
+        let bg = document.getElementById('quote-section-bg-div');
+        if (!bg) {
+          bg = document.createElement('div');
+          bg.id = 'quote-section-bg-div';
+          bg.style.cssText = 'position:absolute;inset:0;background-size:cover;background-position:center;opacity:0.08;pointer-events:none;z-index:0;';
+          qs.insertBefore(bg, qs.firstChild);
+        }
+        bg.style.backgroundImage = "url('" + quoteSrc + "')";
+      }
+    } catch(e) {}
+  }
+
   // ── Init ────────────────────────────────────────────────────────────────
+  applyPhotoSlots();
   renderProducts();
 
   document.querySelectorAll('a[href^="#"]').forEach(a => {
