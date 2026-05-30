@@ -827,9 +827,10 @@ function renderProductList() {
   document.getElementById('prod-hidden-lbl').style.display = hidden.length ? '' : 'none';
 
   function renderRow(p) {
+    const emo = p.emoji || '📦';
     const thumb = p.img
-      ? `<div class="prod-row-thumb"><img src="${p.img}" alt=""></div>`
-      : `<div class="prod-row-thumb">${p.emoji || '📦'}</div>`;
+      ? `<div class="prod-row-thumb"><img src="${p.img}" alt="" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\\'font-size:1.4rem;\\'>${emo}</span>'"></div>`
+      : `<div class="prod-row-thumb">${emo}</div>`;
     const statusBadge = `<span class="status-badge ${p.status || 'active'}">${p.status === 'coming-soon' ? '🕐 Coming Soon' : p.status === 'hidden' ? '⚫ Hidden' : '🟢 Active'}</span>`;
     const cat = CATEGORY_LABELS[p.category] || (p.category || '');
     return `
@@ -919,27 +920,24 @@ function closeProductModal() {
 
 function handleModalImageUpload(e) {
   const file = e.target.files[0]; if (!file) return;
+  showToast('⏳ Processing image…');
   const reader = new FileReader();
+  reader.onerror = () => showToast('❌ Could not read file. Try a different image.');
   reader.onload = ev => {
-    // Compress via canvas — max 900px wide, 0.78 JPEG quality
-    // This keeps most product photos under 120KB regardless of original size
-    const img = new Image();
-    img.onload = function() {
-      const MAX_W = 900;
-      let w = img.width, h = img.height;
-      if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }
-      const canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      const compressed = canvas.toDataURL('image/jpeg', 0.78);
-      const kb = Math.round(compressed.length * 0.75 / 1024);
-      _modalImgDataUrl = compressed;
-      document.getElementById('modal-img-preview').src = compressed;
-      document.getElementById('modal-img-preview-wrap').style.display = 'block';
-      document.getElementById('modal-img-url').value = '';
-      showToast(`📸 Image ready! (${kb} KB after compression)`);
-    };
-    img.src = ev.target.result;
+    compressToJpeg(ev.target.result, 900, 0.78,
+      compressed => {
+        const kb = Math.round(compressed.length * 0.75 / 1024);
+        _modalImgDataUrl = compressed;
+        document.getElementById('modal-img-preview').src = compressed;
+        document.getElementById('modal-img-preview-wrap').style.display = 'block';
+        document.getElementById('modal-img-url').value = '';
+        showToast(`📸 Image ready — ${kb} KB`);
+      },
+      err => {
+        showToast('❌ Image could not be processed. Try a JPG or PNG file.');
+        console.error('Modal image compress error:', err);
+      }
+    );
   };
   reader.readAsDataURL(file);
 }
@@ -1330,15 +1328,25 @@ function renderPhotoSlots() {
   }).join('');
 }
 
-function compressToJpeg(dataUrl, maxW, quality, cb) {
+function compressToJpeg(dataUrl, maxW, quality, cb, onErr) {
   const img = new Image();
   img.onload = function() {
-    let w = img.width, h = img.height;
-    if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
-    const c = document.createElement('canvas');
-    c.width = w; c.height = h;
-    c.getContext('2d').drawImage(img, 0, 0, w, h);
-    cb(c.toDataURL('image/jpeg', quality));
+    try {
+      let w = img.width, h = img.height;
+      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      cb(c.toDataURL('image/jpeg', quality));
+    } catch(e) {
+      console.error('compressToJpeg canvas error:', e);
+      if (onErr) onErr(e); else cb(dataUrl); // fallback: use original
+    }
+  };
+  img.onerror = function() {
+    console.error('compressToJpeg: image failed to load');
+    if (onErr) onErr(new Error('Image failed to decode'));
+    else cb(dataUrl); // fallback: use original
   };
   img.src = dataUrl;
 }
@@ -1347,17 +1355,23 @@ function handlePhotoUpload(event) {
   const files = Array.from(event.target.files);
   if (!files.length) return;
   let done = 0;
+  const total = files.length;
+  showToast(`⏳ Processing ${total} photo(s)…`);
   files.forEach(file => {
     const reader = new FileReader();
+    reader.onerror = () => { done++; if (done === total) { renderPhotoLibrary(); showToast(`⚠️ Some files could not be read.`); } };
     reader.onload = e => {
-      compressToJpeg(e.target.result, 1200, 0.78, compressed => {
-      const data = loadPhotoData();
-      if (!data.library) data.library = [];
-      data.library.push({ name: file.name.replace(/\.[^.]+$/, ''), src: compressed });
-      savePhotoData(data);
-      done++;
-      if (done === files.length) { renderPhotoLibrary(); showToast(`✅ ${files.length} photo(s) uploaded!`); }
-      }); // end compressToJpeg
+      compressToJpeg(e.target.result, 1200, 0.78,
+        compressed => {
+          const photoData = loadPhotoData();
+          if (!photoData.library) photoData.library = [];
+          photoData.library.push({ name: file.name.replace(/\.[^.]+$/, ''), src: compressed });
+          savePhotoData(photoData);
+          done++;
+          if (done === total) { renderPhotoLibrary(); showToast(`✅ ${total} photo(s) added to library!`); }
+        },
+        () => { done++; showToast(`⚠️ "${file.name}" could not be processed — try a JPG or PNG.`); if (done === total) renderPhotoLibrary(); }
+      );
     };
     reader.readAsDataURL(file);
   });
@@ -1482,6 +1496,19 @@ function showToast(msg) {
 }
 
 // ── INIT ───────────────────────────────────────────────────────────────────
+// Sanitise: remove any truncated/invalid base64 img values from past bad saves
+(function sanitiseProductImages() {
+  let dirty = false;
+  products.forEach(p => {
+    if (p.img && p.img.startsWith('data:')) {
+      // A valid base64 data URL ends with proper padding — rough check: must be > 500 chars
+      // AND the base64 body must not be obviously truncated (divisible-by-4 length)
+      const b64 = p.img.split(',')[1] || '';
+      if (b64.length < 100) { p.img = ''; dirty = true; } // clearly broken
+    }
+  });
+  if (dirty) { autoSaveStock(); console.log('Sanitised broken product images'); }
+})();
 loadFromStorage();
 renderValues();
 updateDashboardStats();
