@@ -740,7 +740,12 @@ function autoSaveStock() {
     const saved = JSON.parse(localStorage.getItem('flyingMangoesSiteData') || '{}');
     saved.products = products;
     localStorage.setItem('flyingMangoesSiteData', JSON.stringify(saved));
-  } catch(e) {}
+    return true;
+  } catch(e) {
+    console.error('autoSaveStock failed:', e);
+    showToast('❌ Storage full! Image too large — use a URL instead of uploading a file.');
+    return false;
+  }
 }
 
 // ── CHANGE LOG ─────────────────────────────────────────────────────────────
@@ -914,14 +919,27 @@ function closeProductModal() {
 
 function handleModalImageUpload(e) {
   const file = e.target.files[0]; if (!file) return;
-  if (file.size > 3.5 * 1024 * 1024) { showToast('⚠️ Image is over 3MB — quality will be reduced.'); }
   const reader = new FileReader();
   reader.onload = ev => {
-    _modalImgDataUrl = ev.target.result;
-    document.getElementById('modal-img-preview').src = ev.target.result;
-    document.getElementById('modal-img-preview-wrap').style.display = 'block';
-    document.getElementById('modal-img-url').value = '';
-    showToast('📸 Image ready!');
+    // Compress via canvas — max 900px wide, 0.78 JPEG quality
+    // This keeps most product photos under 120KB regardless of original size
+    const img = new Image();
+    img.onload = function() {
+      const MAX_W = 900;
+      let w = img.width, h = img.height;
+      if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const compressed = canvas.toDataURL('image/jpeg', 0.78);
+      const kb = Math.round(compressed.length * 0.75 / 1024);
+      _modalImgDataUrl = compressed;
+      document.getElementById('modal-img-preview').src = compressed;
+      document.getElementById('modal-img-preview-wrap').style.display = 'block';
+      document.getElementById('modal-img-url').value = '';
+      showToast(`📸 Image ready! (${kb} KB after compression)`);
+    };
+    img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 }
@@ -1312,20 +1330,34 @@ function renderPhotoSlots() {
   }).join('');
 }
 
+function compressToJpeg(dataUrl, maxW, quality, cb) {
+  const img = new Image();
+  img.onload = function() {
+    let w = img.width, h = img.height;
+    if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+    const c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    c.getContext('2d').drawImage(img, 0, 0, w, h);
+    cb(c.toDataURL('image/jpeg', quality));
+  };
+  img.src = dataUrl;
+}
+
 function handlePhotoUpload(event) {
   const files = Array.from(event.target.files);
   if (!files.length) return;
   let done = 0;
   files.forEach(file => {
-    if (file.size > 3 * 1024 * 1024) { showToast(`⚠️ ${file.name} is over 3MB — skipped. Use a URL instead.`); done++; return; }
     const reader = new FileReader();
     reader.onload = e => {
+      compressToJpeg(e.target.result, 1200, 0.78, compressed => {
       const data = loadPhotoData();
       if (!data.library) data.library = [];
-      data.library.push({ name: file.name.replace(/\.[^.]+$/, ''), src: e.target.result });
+      data.library.push({ name: file.name.replace(/\.[^.]+$/, ''), src: compressed });
       savePhotoData(data);
       done++;
-      if (done === files.length) { renderPhotoLibrary(); showToast(`✅ ${files.length} photo(s) uploaded to library!`); }
+      if (done === files.length) { renderPhotoLibrary(); showToast(`✅ ${files.length} photo(s) uploaded!`); }
+      }); // end compressToJpeg
     };
     reader.readAsDataURL(file);
   });
