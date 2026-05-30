@@ -220,6 +220,7 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
   .stock-controls { width: 100%; justify-content: flex-end; }
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
 </head>
 <body>
 
@@ -918,28 +919,22 @@ function closeProductModal() {
   document.body.style.overflow = '';
 }
 
-function handleModalImageUpload(e) {
+async function handleModalImageUpload(e) {
   const file = e.target.files[0]; if (!file) return;
-  showToast('⏳ Processing image…');
-  const reader = new FileReader();
-  reader.onerror = () => showToast('❌ Could not read file. Try a different image.');
-  reader.onload = ev => {
-    compressToJpeg(ev.target.result, 900, 0.78,
-      compressed => {
-        const kb = Math.round(compressed.length * 0.75 / 1024);
-        _modalImgDataUrl = compressed;
-        document.getElementById('modal-img-preview').src = compressed;
-        document.getElementById('modal-img-preview-wrap').style.display = 'block';
-        document.getElementById('modal-img-url').value = '';
-        showToast(`📸 Image ready — ${kb} KB`);
-      },
-      err => {
-        showToast('❌ Image could not be processed. Try a JPG or PNG file.');
-        console.error('Modal image compress error:', err);
-      }
-    );
-  };
-  reader.readAsDataURL(file);
+  const isHeic = /\.heic$|\.heif$/i.test(file.name) || file.type === 'image/heic' || file.type === 'image/heif';
+  showToast(isHeic ? '⏳ Converting HEIC → JPEG…' : '⏳ Processing image…');
+  try {
+    const compressed = await processImageFile(file, 900, 0.78);
+    const kb = Math.round(compressed.length * 0.75 / 1024);
+    _modalImgDataUrl = compressed;
+    document.getElementById('modal-img-preview').src = compressed;
+    document.getElementById('modal-img-preview-wrap').style.display = 'block';
+    document.getElementById('modal-img-url').value = '';
+    showToast(`📸 Image ready — ${kb} KB`);
+  } catch(err) {
+    showToast('❌ ' + (err.message || 'Could not process image'));
+    console.error('Modal image error:', err);
+  }
 }
 
 function clearModalImage() {
@@ -1328,9 +1323,57 @@ function renderPhotoSlots() {
   }).join('');
 }
 
+// ── IMAGE PROCESSING PIPELINE ─────────────────────────────────────────────
+// Handles HEIC (iPhone default) → JPEG → canvas compress → data URL
+// Returns a Promise<string> (compressed JPEG data URL)
+async function processImageFile(file, maxW, quality) {
+  let blob = file;
+
+  // Step 1: Convert HEIC/HEIF to JPEG (Chrome/Firefox can't decode HEIC natively)
+  const isHeic = file.type === 'image/heic' || file.type === 'image/heif' ||
+                 /\.heic$|\.heif$/i.test(file.name);
+  if (isHeic) {
+    try {
+      blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 });
+      if (Array.isArray(blob)) blob = blob[0]; // heic2any can return array
+    } catch(e) {
+      throw new Error('Could not convert HEIC: ' + (e.message || e));
+    }
+  }
+
+  // Step 2: Read as data URL
+  const dataUrl = await new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onerror = () => rej(new Error('FileReader failed'));
+    r.onload  = e => res(e.target.result);
+    r.readAsDataURL(blob);
+  });
+
+  // Step 3: Compress via canvas
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onerror = () => rej(new Error('Image decode failed — try a JPG or PNG'));
+    img.onload  = function() {
+      try {
+        let w = img.width, h = img.height;
+        if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        res(c.toDataURL('image/jpeg', quality));
+      } catch(e) { rej(e); }
+    };
+    img.src = dataUrl;
+  });
+}
+
+// Legacy callback wrapper kept for any existing callers
 function compressToJpeg(dataUrl, maxW, quality, cb, onErr) {
+  const fakeFile = new Blob([atob(dataUrl.split(',')[1] || '')], { type: 'image/jpeg' });
+  // Simpler: just do inline compress
   const img = new Image();
-  img.onload = function() {
+  img.onerror = () => { if (onErr) onErr(new Error('decode failed')); else cb(dataUrl); };
+  img.onload  = function() {
     try {
       let w = img.width, h = img.height;
       if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
@@ -1338,43 +1381,32 @@ function compressToJpeg(dataUrl, maxW, quality, cb, onErr) {
       c.width = w; c.height = h;
       c.getContext('2d').drawImage(img, 0, 0, w, h);
       cb(c.toDataURL('image/jpeg', quality));
-    } catch(e) {
-      console.error('compressToJpeg canvas error:', e);
-      if (onErr) onErr(e); else cb(dataUrl); // fallback: use original
-    }
-  };
-  img.onerror = function() {
-    console.error('compressToJpeg: image failed to load');
-    if (onErr) onErr(new Error('Image failed to decode'));
-    else cb(dataUrl); // fallback: use original
+    } catch(e) { if (onErr) onErr(e); else cb(dataUrl); }
   };
   img.src = dataUrl;
 }
 
-function handlePhotoUpload(event) {
+async function handlePhotoUpload(event) {
   const files = Array.from(event.target.files);
   if (!files.length) return;
-  let done = 0;
   const total = files.length;
   showToast(`⏳ Processing ${total} photo(s)…`);
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onerror = () => { done++; if (done === total) { renderPhotoLibrary(); showToast(`⚠️ Some files could not be read.`); } };
-    reader.onload = e => {
-      compressToJpeg(e.target.result, 1200, 0.78,
-        compressed => {
-          const photoData = loadPhotoData();
-          if (!photoData.library) photoData.library = [];
-          photoData.library.push({ name: file.name.replace(/\.[^.]+$/, ''), src: compressed });
-          savePhotoData(photoData);
-          done++;
-          if (done === total) { renderPhotoLibrary(); showToast(`✅ ${total} photo(s) added to library!`); }
-        },
-        () => { done++; showToast(`⚠️ "${file.name}" could not be processed — try a JPG or PNG.`); if (done === total) renderPhotoLibrary(); }
-      );
-    };
-    reader.readAsDataURL(file);
-  });
+  let succeeded = 0;
+  for (const file of files) {
+    try {
+      const compressed = await processImageFile(file, 1200, 0.78);
+      const photoData = loadPhotoData();
+      if (!photoData.library) photoData.library = [];
+      photoData.library.push({ name: file.name.replace(/\.[^.]+$/, ''), src: compressed });
+      savePhotoData(photoData);
+      succeeded++;
+    } catch(err) {
+      showToast(`⚠️ "${file.name}" failed: ${err.message || 'unknown error'}`);
+      console.error('Photo upload error:', file.name, err);
+    }
+  }
+  renderPhotoLibrary();
+  if (succeeded > 0) showToast(`✅ ${succeeded} of ${total} photo(s) added to library!`);
 }
 
 function addPhotoByUrl() {
