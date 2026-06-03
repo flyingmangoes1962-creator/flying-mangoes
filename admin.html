@@ -673,6 +673,20 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
 <div class="toast" id="toast"></div>
 
 <script>
+// ── ADMIN ACCESS GUARD ────────────────────────────────────────────────────
+(function() {
+  const ADMIN_KEY = 'fm_admin_auth';
+  const ADMIN_PASS = 'flyingmangoes885';
+  if (sessionStorage.getItem(ADMIN_KEY) !== 'ok') {
+    const pw = prompt('🥭 Flying Mangoes Admin\n\nEnter password to continue:');
+    if (pw !== ADMIN_PASS) {
+      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;color:#888;">Access denied. <a href="index.html" style="color:#F5820A;margin-left:0.5rem;">← Back to site</a></div>';
+      throw new Error('Access denied');
+    }
+    sessionStorage.setItem(ADMIN_KEY, 'ok');
+  }
+})();
+
 // ── CATALOG DEFAULTS (source of truth for first load) ─────────────────────
 const DEFAULT_PRODUCTS = [
   // ── Active — Mango Season ──────────────────────────────────────────────────
@@ -1509,7 +1523,13 @@ function saveAll() {
     values,
     settings: { brandName:document.getElementById('brand-name').value, tagline:document.getElementById('brand-tagline').value, footerNote:document.getElementById('footer-note').value, waNumber:document.getElementById('wa-number').value, ctaH2:document.getElementById('cta-h2').value, ctaSub:document.getElementById('cta-sub').value }
   };
-  try { localStorage.setItem('flyingMangoesSiteData', JSON.stringify(siteData)); } catch(e) {}
+  let saveErr = null;
+  try { localStorage.setItem('flyingMangoesSiteData', JSON.stringify(siteData)); } catch(e) { saveErr = e; }
+  if (saveErr) {
+    btn.disabled = false; btn.textContent = '💾 Save Changes';
+    showToast('❌ Save failed — storage full! Remove uploaded photos and try again, or use image URLs instead.');
+    return;
+  }
   setTimeout(() => {
     btn.disabled = false; btn.textContent = '💾 Save Changes';
     changeCount = 0; changes = [];

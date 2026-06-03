@@ -15,3 +15,6 @@ npm-debug.log*
 
 # OS
 .DS_Store
+
+# Original uncompressed images (kept locally as backup)
+images/originals/

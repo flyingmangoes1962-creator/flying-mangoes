@@ -593,7 +593,7 @@
       <h2>Don't miss this season's harvest.</h2>
       <p>300–400 mangoes ready this weekend. Once they're gone, they're gone.</p>
       <div class="order-form">
-        <input class="order-input" type="tel" placeholder="Enter your phone number" id="notify-phone"/>
+        <input class="order-input" type="tel" placeholder="Enter your phone number" id="cta-notify-phone"/>
         <button class="order-btn" onclick="notifyMe()">Notify Me</button>
       </div>
       <p style="font-size:0.78rem;margin-top:1rem;color:rgba(255,255,255,0.5);">We'll WhatsApp you with the order link. No spam, ever.</p>
@@ -890,7 +890,8 @@
     } catch (err) {
       showToast('❌ ' + (err.message || 'Something went wrong'));
     } finally {
-      btn.disabled = false; btn.textContent = 'Proceed to Pay →';
+      btn.disabled = false;
+      btn.innerHTML = '🔒 Pay ₹<span id="proceed-amount">' + ((pendingAmount || 0) / 100).toLocaleString('en-IN') + '</span> Securely';
     }
   }
 
@@ -957,9 +958,15 @@
   function closeSuccessModal() { document.getElementById('success-modal').classList.remove('show'); }
 
   function notifyMe() {
-    const phone = document.getElementById('notify-phone').value.trim();
+    const phone = document.getElementById('cta-notify-phone').value.trim();
     if (!phone || phone.length < 10) { showToast('Please enter a valid phone number'); return; }
-    document.getElementById('notify-phone').value = '';
+    // Save to notifications list so admin can see it
+    try {
+      const stored = JSON.parse(localStorage.getItem('flyingMangoesNotifications') || '[]');
+      stored.push({ product: 'Season update', phone, name: '', timestamp: new Date().toISOString() });
+      localStorage.setItem('flyingMangoesNotifications', JSON.stringify(stored));
+    } catch(e) {}
+    document.getElementById('cta-notify-phone').value = '';
     showToast("🥭 Added! We'll WhatsApp you shortly.");
   }
 
@@ -1183,9 +1190,7 @@
   });
   document.getElementById('phone-modal-overlay').addEventListener('click', function(e) { if (e.target === this) closePhoneModal(); });
   document.getElementById('success-modal').addEventListener('click', function(e) { if (e.target === this) closeSuccessModal(); });
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('customer-phone').addEventListener('keypress', e => { if (e.key === 'Enter') proceedToPayment(); });
-  });
+  document.getElementById('customer-phone').addEventListener('keypress', e => { if (e.key === 'Enter') proceedToPayment(); });
 </script>
 </body>
 </html>
