@@ -2,12 +2,17 @@
   "version": 2,
   "builds": [
     { "src": "api/*.js", "use": "@vercel/node" },
-    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "admin.html", "use": "@vercel/static" },
     { "src": "images/**", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/api/create-order", "dest": "/api/create-order.js" },
     { "src": "/api/verify-payment", "dest": "/api/verify-payment.js" },
+    { "src": "/admin", "dest": "/admin.html" },
+    { "src": "/admin.html", "dest": "/admin.html" },
+    { "src": "/images/(.*)", "dest": "/images/$1" },
+    { "src": "/", "dest": "/index.html" },
     { "src": "/(.*)", "dest": "/$1" }
   ]
 }
