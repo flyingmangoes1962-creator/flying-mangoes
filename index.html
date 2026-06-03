@@ -716,14 +716,10 @@
       const saved = JSON.parse(localStorage.getItem('flyingMangoesSiteData') || '{}');
       if (saved.products && saved.products.length) {
         // Normalize: ensure all products have the new fields (status, category, season)
-        const existing = saved.products.map(p => ({
+        return saved.products.map(p => ({
           status: 'active', category: 'mango', season: 'Summer', highlight: '',
           origPrice: '', offerLabel: '', ...p
         }));
-        // Append new default products not yet saved (matched by id)
-        const existingIds = new Set(existing.map(p => p.id));
-        DEFAULT_PRODUCTS.forEach(def => { if (!existingIds.has(def.id)) existing.push({...def}); });
-        return existing;
       }
     } catch(e) {}
     return DEFAULT_PRODUCTS;
