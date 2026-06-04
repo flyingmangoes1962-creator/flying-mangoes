@@ -144,25 +144,36 @@
   .modal-close:hover { border-color: var(--mango); color: var(--mango); }
 
   /* PHONE MODAL */
-  .phone-modal { background: white; border-radius: 1.5rem; padding: 2rem; max-width: 420px; width: 100%; transform: scale(0.9); transition: transform 0.3s; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+  .phone-modal { background: white; border-radius: 1.75rem; padding: 0; max-width: 420px; width: 100%; transform: scale(0.92); transition: transform 0.3s; box-shadow: 0 24px 80px rgba(0,0,0,0.22); overflow: hidden; }
   .modal-overlay.show .phone-modal { transform: scale(1); }
-  .phone-modal h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.4rem; }
-  .phone-modal p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.5; }
-  .phone-input-row { display: flex; gap: 0; background: #F5F0E8; border-radius: 0.75rem; overflow: hidden; margin-bottom: 0.85rem; border: 1.5px solid rgba(92,61,30,0.15); }
-  .phone-prefix { padding: 0.75rem 0.9rem; font-size: 0.9rem; color: var(--text-muted); background: transparent; font-weight: 500; }
-  .phone-field { flex: 1; border: none; outline: none; padding: 0.75rem 0.5rem; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; background: transparent; color: var(--text); }
-  .addr-field { width: 100%; border: 1.5px solid rgba(92,61,30,0.15); border-radius: 0.75rem; padding: 0.75rem 0.9rem; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--text); outline: none; margin-bottom: 0.75rem; box-sizing: border-box; transition: border-color 0.2s, background 0.2s; }
+  .checkout-header { background: linear-gradient(135deg, var(--leaf) 0%, #3a6b1e 100%); padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 0.85rem; }
+  .checkout-header-icon { font-size: 2rem; line-height: 1; }
+  .checkout-header-text { flex: 1; }
+  .checkout-header-text h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: white; margin: 0 0 0.15rem; }
+  .checkout-header-text p { font-size: 0.82rem; color: rgba(255,255,255,0.75); margin: 0; font-weight: 400; }
+  .checkout-price-pill { background: rgba(255,255,255,0.15); color: white; font-size: 1rem; font-weight: 700; padding: 0.35rem 0.85rem; border-radius: 2rem; font-family: 'Playfair Display', serif; white-space: nowrap; }
+  .checkout-body { padding: 1.4rem 1.5rem 1.5rem; }
+  .checkout-section-label { font-size: 0.65rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 6px; }
+  .checkout-section-label::after { content: ''; flex: 1; height: 1px; background: rgba(92,61,30,0.1); }
+  .checkout-fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.65rem; }
+  .phone-input-row { display: flex; gap: 0; background: #F5F0E8; border-radius: 0.75rem; overflow: hidden; border: 1.5px solid rgba(92,61,30,0.15); transition: border-color 0.2s; }
+  .phone-input-row:focus-within { border-color: var(--mango); background: white; }
+  .phone-prefix { padding: 0.75rem 0.75rem; font-size: 0.88rem; color: var(--text-muted); background: transparent; font-weight: 600; }
+  .phone-field { flex: 1; border: none; outline: none; padding: 0.75rem 0.4rem; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; background: transparent; color: var(--text); }
+  .addr-field { width: 100%; border: 1.5px solid rgba(92,61,30,0.15); border-radius: 0.75rem; padding: 0.72rem 0.9rem; font-size: 0.92rem; font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--text); outline: none; margin-bottom: 0.6rem; box-sizing: border-box; transition: border-color 0.2s, background 0.2s; }
   .addr-field:focus { border-color: var(--mango); background: white; }
-  .addr-field::placeholder { color: #B0A090; }
-  .addr-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
-  .addr-label { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.25rem; display: block; }
-  .form-section { border-top: 1px solid rgba(92,61,30,0.1); padding-top: 0.75rem; margin-top: 0.75rem; }
-  .form-section-title { font-size: 0.72rem; font-weight: 700; color: var(--mango-dark); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.65rem; }
+  .addr-field::placeholder { color: #B8A898; }
+  .addr-label { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; display: block; }
+  .form-section { margin-top: 0.85rem; }
+  .form-section-title { font-size: 0.65rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 6px; }
+  .form-section-title::after { content: ''; flex: 1; height: 1px; background: rgba(92,61,30,0.1); }
   .pin-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; align-items: start; }
   .city-auto { background: #F0FFF4; border-color: #86EFAC !important; color: #15803D; font-weight: 500; }
-  .proceed-btn { background: var(--mango); color: white; border: none; padding: 1rem; border-radius: 0.75rem; font-size: 1rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; width: 100%; transition: background 0.2s; margin-top: 0.5rem; letter-spacing: 0.01em; }
-  .proceed-btn:hover { background: var(--mango-dark); }
-  .proceed-btn:disabled { background: #CCC; cursor: not-allowed; }
+  .proceed-btn { background: var(--mango); color: white; border: none; padding: 1rem; border-radius: 0.9rem; font-size: 1rem; font-weight: 700; font-family: 'DM Sans', sans-serif; cursor: pointer; width: 100%; transition: all 0.2s; margin-top: 0.85rem; letter-spacing: 0.01em; box-shadow: 0 4px 16px rgba(245,130,10,0.35); }
+  .proceed-btn:hover { background: var(--mango-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,130,10,0.4); }
+  .proceed-btn:disabled { background: #CCC; cursor: not-allowed; box-shadow: none; transform: none; }
+  .checkout-trust { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 0.75rem; }
+  .checkout-trust-item { font-size: 0.7rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
 
   .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--leaf); color: white; padding: 0.75rem 1.5rem; border-radius: 2rem; font-size: 0.9rem; z-index: 999; transition: transform 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
   .toast.show { transform: translateX(-50%) translateY(0); }
@@ -621,48 +632,62 @@
 
 <!-- CHECKOUT MODAL -->
 <div class="modal-overlay" id="phone-modal-overlay">
-  <div class="phone-modal" style="max-width:400px;">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.6rem;">
-      <span style="font-size:1.6rem;">🥭</span>
-      <div>
-        <h3 style="font-size:1.15rem;margin-bottom:0;">Complete Your Order</h3>
-        <p id="phone-modal-product-line" style="font-size:0.85rem;color:var(--mango-dark);font-weight:500;margin:0;"></p>
+  <div class="phone-modal">
+
+    <!-- Header -->
+    <div class="checkout-header">
+      <div class="checkout-header-icon">🥭</div>
+      <div class="checkout-header-text">
+        <h3>Complete Your Order</h3>
+        <p id="phone-modal-product-line"></p>
       </div>
+      <div class="checkout-price-pill">₹<span id="checkout-header-amount"></span></div>
     </div>
 
-    <!-- Contact -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;margin-bottom:0.65rem;">
-      <div>
-        <label class="addr-label">Name</label>
-        <input class="addr-field" type="text" id="customer-name" placeholder="Your name" autocomplete="name" style="margin-bottom:0;">
-      </div>
-      <div>
-        <label class="addr-label">WhatsApp</label>
-        <div class="phone-input-row" style="margin-bottom:0;">
-          <span class="phone-prefix">+91</span>
-          <input class="phone-field" type="tel" id="customer-phone" placeholder="98765 43210" maxlength="10">
-        </div>
-      </div>
-    </div>
+    <div class="checkout-body">
 
-    <!-- Delivery Address -->
-    <div class="form-section">
-      <div class="form-section-title">📦 Delivery Address</div>
-      <input class="addr-field" type="text" id="customer-address" placeholder="House no., Street, Landmark, Area" autocomplete="street-address">
-      <div class="pin-row">
+      <!-- Contact -->
+      <div class="checkout-section-label">👤 Your Details</div>
+      <div class="checkout-fields-row">
         <div>
-          <label class="addr-label">Pincode</label>
-          <input class="addr-field" type="tel" id="customer-pincode" placeholder="560001" maxlength="6" style="margin-bottom:0;" autocomplete="postal-code" oninput="autoFillCity(this.value)">
+          <label class="addr-label">Full Name</label>
+          <input class="addr-field" type="text" id="customer-name" placeholder="Rahul Sharma" autocomplete="name" style="margin-bottom:0;">
         </div>
         <div>
-          <label class="addr-label">City <span id="city-auto-label" style="color:#16A34A;font-size:0.65rem;display:none;">✓ auto-filled</span></label>
-          <input class="addr-field" type="text" id="customer-city" placeholder="Bengaluru" style="margin-bottom:0;" autocomplete="address-level2">
+          <label class="addr-label">WhatsApp Number</label>
+          <div class="phone-input-row">
+            <span class="phone-prefix">+91</span>
+            <input class="phone-field" type="tel" id="customer-phone" placeholder="98765 43210" maxlength="10">
+          </div>
         </div>
       </div>
-    </div>
 
-    <button class="proceed-btn" id="proceed-btn" onclick="proceedToPayment()">🔒 Pay ₹<span id="proceed-amount"></span> Securely</button>
-    <button onclick="closePhoneModal()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;margin-top:0.6rem;cursor:pointer;width:100%;">Cancel</button>
+      <!-- Delivery -->
+      <div class="form-section">
+        <div class="form-section-title">📦 Delivery Address</div>
+        <input class="addr-field" type="text" id="customer-address" placeholder="House no., Street, Landmark, Area" autocomplete="street-address">
+        <div class="pin-row">
+          <div>
+            <label class="addr-label">Pincode</label>
+            <input class="addr-field" type="tel" id="customer-pincode" placeholder="560001" maxlength="6" style="margin-bottom:0;" autocomplete="postal-code" oninput="autoFillCity(this.value)">
+          </div>
+          <div>
+            <label class="addr-label">City <span id="city-auto-label" style="color:#16A34A;font-size:0.65rem;display:none;">✓ auto-filled</span></label>
+            <input class="addr-field" type="text" id="customer-city" placeholder="Bengaluru" style="margin-bottom:0;" autocomplete="address-level2">
+          </div>
+        </div>
+      </div>
+
+      <button class="proceed-btn" id="proceed-btn" onclick="proceedToPayment()">🔒 Pay ₹<span id="proceed-amount"></span> Securely</button>
+
+      <div class="checkout-trust">
+        <span class="checkout-trust-item">🔐 256-bit encrypted</span>
+        <span class="checkout-trust-item">⚡ UPI / Card / Netbanking</span>
+        <span class="checkout-trust-item">✅ Razorpay secured</span>
+      </div>
+
+      <button onclick="closePhoneModal()" style="background:none;border:none;color:var(--text-muted);font-size:0.78rem;margin-top:0.6rem;cursor:pointer;width:100%;padding:0.3rem;">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -840,10 +865,10 @@
   function startPayment(productName, amountPaise) {
     pendingProduct = productName;
     pendingAmount  = amountPaise;
-    document.getElementById('phone-modal-product-line').textContent =
-      `${productName} — ₹${(amountPaise/100).toLocaleString('en-IN')}`;
-    document.getElementById('proceed-amount').textContent =
-      (amountPaise/100).toLocaleString('en-IN');
+    const amtFormatted = (amountPaise/100).toLocaleString('en-IN');
+    document.getElementById('phone-modal-product-line').textContent = productName;
+    document.getElementById('proceed-amount').textContent = amtFormatted;
+    document.getElementById('checkout-header-amount').textContent = amtFormatted;
     ['customer-name','customer-phone','customer-address','customer-city','customer-pincode'].forEach(id => {
       const el = document.getElementById(id);
       el.value = '';
