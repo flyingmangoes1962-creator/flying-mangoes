@@ -690,25 +690,38 @@ body { font-family: 'DM Sans', sans-serif; background: #F5F0E8; color: var(--tex
 // ── CATALOG DEFAULTS (source of truth for first load) ─────────────────────
 const DEFAULT_PRODUCTS = [
   // ── Active — Mango Season ──────────────────────────────────────────────────
-  { id:1, name:'The Classic Dozen',   desc:'12 hand-picked Alphonso mangoes. Sweet, saffron-hued, legendary. The one Thatha grew first.',                                                                           price:'₹699',   origPrice:'₹999',   offerLabel:'Introductory Offer', priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:'images/mallika.jpg', pricePaise:69900,  stock:50, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
-  { id:2, name:'The Family Box',      desc:'24 mixed mangoes — Alphonso & Kesar. For the family that eats together and argues over the best variety.',                                                             price:'₹1,199', origPrice:'₹1,599', offerLabel:'Launch Price',        priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/mallika.jpg',     pricePaise:119900, stock:30, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
-  { id:3, name:"Thatha's Reserve",    desc:'6 premium, estate-selected mangoes from the oldest trees. The most intensely flavoured fruit on the farm.',                                                            price:'₹799',   origPrice:'₹1,099', offerLabel:'Limited Season',      priceUnit:'/ box', badge:'Limited',    emoji:'✨', img:'images/thatha-farm.jpg',    pricePaise:79900,  stock:10, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
-  { id:4, name:'Gift a Harvest',      desc:'Send someone a box with a handwritten note. The most honest gift you can give — pure, seasonal, alive.',                                                              price:'₹899',   origPrice:'₹1,199', offerLabel:'Early Bird',          priceUnit:'/ box', badge:'',           emoji:'🎁', img:'images/orchard.jpg',        pricePaise:89900,  stock:20, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
+  { id:1, name:'Classic Mallika',     desc:'12 hand-picked Mallika mangoes. Sweet, saffron-hued, and intensely fragrant. Farm-fresh from our orchard, picked the day you order.',                                  price:'₹399',   origPrice:'₹599',   offerLabel:'Introductory Offer', priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:'images/mallika.jpg', pricePaise:39900, stock:50, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
+  { id:2, name:'Dasheri',             desc:'12 premium Dasheri mangoes. Silky, aromatic, unmistakably north Indian. The mango that every connoisseur keeps coming back for.',                                       price:'₹799',   origPrice:'₹999',   offerLabel:'Launch Price',        priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/mallika.jpg', pricePaise:79900, stock:30, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
   // ── Coming Soon ────────────────────────────────────────────────────────────
-  { id:5, name:'Chikoo (Sapota) Box', desc:'The brown fruit with a caramel heart. Our second love after the mango — slow-grown, intensely sweet, deeply nourishing.',                                             price:'₹549',   origPrice:'₹699',   offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🍂', img:'',                          pricePaise:54900,  stock:0,  inStock:false, status:'coming-soon', category:'sapota',    season:'Monsoon',  highlight:'Opens October 2026' },
-  { id:6, name:'Jamun Season Box',    desc:'Ink-dark, tart, alive. The fruit of the monsoon. Known to balance blood sugar, beloved by every Indian grandmother for generations.',                                  price:'₹399',   origPrice:'₹549',   offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🫐', img:'',                          pricePaise:39900,  stock:0,  inStock:false, status:'coming-soon', category:'jamun',     season:'Monsoon',  highlight:'Opens July 2026' },
-  { id:7, name:'Royal Jackfruit',     desc:'The largest fruit on earth. One jackfruit feeds a family. Ours are grown slow, cut fresh, and sent whole — the way Thatha always intended.',                          price:'₹899',   origPrice:'₹1,199', offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🍈', img:'',                          pricePaise:89900,  stock:0,  inStock:false, status:'coming-soon', category:'jackfruit', season:'Summer',   highlight:'Opens June 2027' },
+  { id:5, name:'Chikoo (Sapota) Box', desc:'The brown fruit with a caramel heart. Our second love after the mango — slow-grown, intensely sweet, deeply nourishing.',                                             price:'₹549',   origPrice:'₹699',   offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🍂', img:'',                          pricePaise:54900, stock:0,  inStock:false, status:'coming-soon', category:'sapota',    season:'Monsoon',  highlight:'Opens October 2026' },
+  { id:6, name:'Jamun Season Box',    desc:'Ink-dark, tart, alive. The fruit of the monsoon. Known to balance blood sugar, beloved by every Indian grandmother for generations.',                                  price:'₹399',   origPrice:'₹549',   offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🫐', img:'',                          pricePaise:39900, stock:0,  inStock:false, status:'coming-soon', category:'jamun',     season:'Monsoon',  highlight:'Opens July 2026' },
+  { id:7, name:'Royal Jackfruit',     desc:'The largest fruit on earth. One jackfruit feeds a family. Ours are grown slow, cut fresh, and sent whole — the way Thatha always intended.',                          price:'₹899',   origPrice:'₹1,199', offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🍈', img:'',                          pricePaise:89900, stock:0,  inStock:false, status:'coming-soon', category:'jackfruit', season:'Summer',   highlight:'Opens June 2027' },
 ];
 
 function loadStoredProducts() {
   try {
     const saved = JSON.parse(localStorage.getItem('flyingMangoesSiteData') || '{}');
     if (saved.products && saved.products.length) {
-      // Normalize existing products — add any new fields introduced in this version
-      return saved.products.map(p => ({
-        status: 'active', category: 'mango', season: 'Summer', highlight: '',
-        origPrice: '', offerLabel: '', ...p
-      }));
+      let migrated = false;
+      const products = saved.products.map(p => {
+        const base = { status: 'active', category: 'mango', season: 'Summer', highlight: '', origPrice: '', offerLabel: '', ...p };
+        // v2 migration: force correct image + pricing for Mallika (id 1) and Dasheri (id 2)
+        if (base.id === 1) {
+          if (base.img !== 'images/mallika.jpg') { base.img = 'images/mallika.jpg'; migrated = true; }
+          if (base.pricePaise !== 39900) { base.pricePaise = 39900; base.price = '₹399'; migrated = true; }
+          if (base.name === 'The Classic Dozen') { base.name = 'Classic Mallika'; migrated = true; }
+        }
+        if (base.id === 2) {
+          if (base.img !== 'images/mallika.jpg') { base.img = 'images/mallika.jpg'; migrated = true; }
+          if (base.pricePaise !== 79900) { base.pricePaise = 79900; base.price = '₹799'; migrated = true; }
+          if (base.name === 'The Family Box') { base.name = 'Dasheri'; migrated = true; }
+        }
+        return base;
+      });
+      if (migrated) {
+        try { localStorage.setItem('flyingMangoesSiteData', JSON.stringify({...saved, products})); } catch(e) {}
+      }
+      return products;
     }
   } catch(e) {}
   return DEFAULT_PRODUCTS.map(p => ({...p}));
