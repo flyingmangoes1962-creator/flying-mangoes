@@ -366,7 +366,7 @@
 </head>
 <body>
 
-<div class="ticker">🌿 <strong>Mango Season 2026 is LIVE</strong> — Mallika &amp; Dasheri · Harvested fresh · Limited stock this weekend</div>
+<div class="ticker">🌿 <strong>Mango Season 2026 is LIVE</strong> — Mallika &amp; Badami · Harvested fresh · Limited stock this weekend</div>
 <nav>
   <a href="#" class="nav-logo">
     <img src="images/logo.png" alt="Flying Mangoes" style="height:52px;width:52px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
@@ -401,14 +401,14 @@
       <a href="#story" class="btn-secondary">Our Story</a>
     </div>
     <div class="hero-trust">
-      <div class="trust-item"><div class="trust-dot"></div><span>Mallika &amp; Dasheri</span></div>
+      <div class="trust-item"><div class="trust-dot"></div><span>Mallika &amp; Badami</span></div>
       <div class="trust-item"><div class="trust-dot"></div><span>Ships in 24hrs</span></div>
       <div class="trust-item"><div class="trust-dot"></div><span>1 Hectare, 0 Chemicals</span></div>
     </div>
   </div>
   <div class="hero-visual">
     <div style="position:relative;width:100%;max-width:460px;">
-      <img id="hero-img" src="images/mangoes-closeup.jpg" alt="Fresh Mallika & Dasheri Mangoes from the farm" style="width:100%;height:420px;object-fit:cover;border-radius:2rem;box-shadow:0 20px 60px rgba(245,130,10,0.25);">
+      <img id="hero-img" src="images/mangoes-closeup.jpg" alt="Fresh Mallika & Badami Mangoes from the farm" style="width:100%;height:420px;object-fit:cover;border-radius:2rem;box-shadow:0 20px 60px rgba(245,130,10,0.25);">
 
     </div>
   </div>
@@ -520,7 +520,7 @@
     </div>
     <div class="gallery-img">
       <img id="gallery2-img" src="images/mangoes-closeup.jpg" alt="Fresh Alphonso mangoes">
-      <div class="gallery-caption"><span>Mallika & Dasheri — sweet, seasonal, farm fresh</span></div>
+      <div class="gallery-caption"><span>Mallika & Badami — sweet, seasonal, farm fresh</span></div>
     </div>
     <div class="gallery-img">
       <img id="gallery3-img" src="images/orchard.jpg" alt="The orchard">
@@ -618,7 +618,7 @@
     <div class="footer-tagline">Est. 1962 by Thatha. Ratnagiri, Maharashtra.</div>
     <div style="margin-top:0.75rem;font-size:0.75rem;color:rgba(255,255,255,0.3);line-height:1.8;">
       One hectare · Zero chemicals · Three generations<br>
-      Mallika &amp; Dasheri · May–June season only
+      Mallika &amp; Badami · May–June season only
     </div>
   </div>
   <ul class="footer-links">
@@ -726,7 +726,7 @@
   const DEFAULT_PRODUCTS = [
     // ── Active — Mango Season ───────────────────────────────────────────────
     { id:1, name:'Classic Mallika',     desc:'12 hand-picked Mallika mangoes. Sweet, saffron-hued, and intensely fragrant. Farm-fresh from our orchard, picked the day you order.',                                  price:'₹399',   origPrice:'₹599',   offerLabel:'Introductory Offer', priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:'images/mallika.jpg', pricePaise:39900, stock:50, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
-    { id:2, name:'Dasheri',             desc:'12 premium Dasheri mangoes. Silky, aromatic, unmistakably north Indian. The mango that every connoisseur keeps coming back for.',                                       price:'₹799',   origPrice:'₹999',   offerLabel:'Launch Price',        priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/mallika.jpg', pricePaise:79900, stock:30, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
+    { id:2, name:'Badami',             desc:'12 premium Badami mangoes. Silky, aromatic, unmistakably north Indian. The mango that every connoisseur keeps coming back for.',                                       price:'₹799',   origPrice:'₹999',   offerLabel:'Launch Price',        priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/mallika.jpg', pricePaise:79900, stock:30, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
     // ── Coming Soon ─────────────────────────────────────────────────────────
     { id:5, name:'Chikoo (Sapota) Box', desc:'The brown fruit with a caramel heart. Our second love after the mango — slow-grown, intensely sweet, deeply nourishing.',                                             price:'₹549',   origPrice:'₹699',   offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🍂', img:'',                          pricePaise:54900, stock:0,  inStock:false, status:'coming-soon', category:'sapota',    season:'Monsoon',  highlight:'Opens October 2026' },
     { id:6, name:'Jamun Season Box',    desc:'Ink-dark, tart, alive. The fruit of the monsoon. Known to balance blood sugar, beloved by every Indian grandmother for generations.',                                  price:'₹399',   origPrice:'₹549',   offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🫐', img:'',                          pricePaise:39900, stock:0,  inStock:false, status:'coming-soon', category:'jamun',     season:'Monsoon',  highlight:'Opens July 2026' },
@@ -741,7 +741,7 @@
         let migrated = false;
         const products = saved.products.map(p => {
           const base = { status: 'active', category: 'mango', season: 'Summer', highlight: '', origPrice: '', offerLabel: '', ...p };
-          // v2 migration: force correct image + pricing for Mallika (id 1) and Dasheri (id 2)
+          // v2 migration: force correct image + pricing for Mallika (id 1) and Badami (id 2)
           if (base.id === 1) {
             if (base.img !== 'images/mallika.jpg') { base.img = 'images/mallika.jpg'; migrated = true; }
             if (base.pricePaise !== 39900) { base.pricePaise = 39900; base.price = '₹399'; migrated = true; }
@@ -750,7 +750,7 @@
           if (base.id === 2) {
             if (base.img !== 'images/mallika.jpg') { base.img = 'images/mallika.jpg'; migrated = true; }
             if (base.pricePaise !== 79900) { base.pricePaise = 79900; base.price = '₹799'; migrated = true; }
-            if (base.name === 'The Family Box') { base.name = 'Dasheri'; migrated = true; }
+            if (base.name === 'The Family Box') { base.name = 'Badami'; migrated = true; }
           }
           return base;
         });
