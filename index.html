@@ -913,11 +913,14 @@
     const btn = document.getElementById('proceed-btn');
     btn.disabled = true; btn.textContent = 'Creating order...';
     try {
-      const res  = await fetch('/api/create-order', {
+      const res = await fetch('/api/create-order', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: pendingAmount, currency: 'INR', receipt: `receipt_${Date.now()}`, product_name: pendingProduct })
       });
-      const data = await res.json();
+      // Safely parse JSON — server may return HTML on a crash
+      let data;
+      try { data = await res.json(); }
+      catch(e) { throw new Error('Payment server error. Please WhatsApp us at +91 99869 88855 to place your order.'); }
       if (!res.ok) throw new Error(data.error || 'Failed to create order');
       closePhoneModal();
       openRazorpay(data, pendingProduct, pendingAmount, '+91' + phone, { name, phone, address, city, pincode });
