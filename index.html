@@ -726,7 +726,7 @@
   const DEFAULT_PRODUCTS = [
     // ── Active — Mango Season ───────────────────────────────────────────────
     { id:1, name:'Classic Mallika',     desc:'12 hand-picked Mallika mangoes. Sweet, saffron-hued, and intensely fragrant. Farm-fresh from our orchard, picked the day you order.',                                  price:'₹399',   origPrice:'₹599',   offerLabel:'Introductory Offer', priceUnit:'/ box', badge:'Bestseller', emoji:'🥭', img:'images/mallika.jpg', pricePaise:39900, stock:50, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
-    { id:2, name:'Badami',             desc:'12 premium Badami mangoes. Silky, aromatic, unmistakably north Indian. The mango that every connoisseur keeps coming back for.',                                       price:'₹799',   origPrice:'₹999',   offerLabel:'Launch Price',        priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/mallika.jpg', pricePaise:79900, stock:30, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
+    { id:2, name:'Badami',             desc:'12 premium Badami mangoes. Silky, aromatic, unmistakably north Indian. The mango that every connoisseur keeps coming back for.',                                       price:'₹799',   origPrice:'₹999',   offerLabel:'Launch Price',        priceUnit:'/ box', badge:'New',        emoji:'🌿', img:'images/badami.jpg',  pricePaise:79900, stock:30, inStock:true,  status:'active',      category:'mango',     season:'Summer',   highlight:'' },
     // ── Coming Soon ─────────────────────────────────────────────────────────
     { id:5, name:'Chikoo (Sapota) Box', desc:'The brown fruit with a caramel heart. Our second love after the mango — slow-grown, intensely sweet, deeply nourishing.',                                             price:'₹549',   origPrice:'₹699',   offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🍂', img:'',                          pricePaise:54900, stock:0,  inStock:false, status:'coming-soon', category:'sapota',    season:'Monsoon',  highlight:'Opens October 2026' },
     { id:6, name:'Jamun Season Box',    desc:'Ink-dark, tart, alive. The fruit of the monsoon. Known to balance blood sugar, beloved by every Indian grandmother for generations.',                                  price:'₹399',   origPrice:'₹549',   offerLabel:'Pre-Launch',          priceUnit:'/ box', badge:'Seasonal',   emoji:'🫐', img:'',                          pricePaise:39900, stock:0,  inStock:false, status:'coming-soon', category:'jamun',     season:'Monsoon',  highlight:'Opens July 2026' },
@@ -748,7 +748,7 @@
             if (base.name === 'The Classic Dozen') { base.name = 'Classic Mallika'; migrated = true; }
           }
           if (base.id === 2) {
-            if (base.img !== 'images/mallika.jpg') { base.img = 'images/mallika.jpg'; migrated = true; }
+            if (base.img !== 'images/badami.jpg') { base.img = 'images/badami.jpg'; migrated = true; }
             if (base.pricePaise !== 79900) { base.pricePaise = 79900; base.price = '₹799'; migrated = true; }
             if (base.name === 'The Family Box') { base.name = 'Badami'; migrated = true; }
           }
