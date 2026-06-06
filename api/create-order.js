@@ -49,6 +49,8 @@ module.exports = async (req, res) => {
     });
   } catch (err) {
     console.error('[create-order]', err);
-    return res.status(500).json({ error: 'Could not create order. Please try again.' });
+    // Return Razorpay's actual error description to help diagnose
+    const detail = err?.error?.description || err?.message || 'Unknown error';
+    return res.status(500).json({ error: 'Could not create order: ' + detail });
   }
 };
