@@ -994,14 +994,22 @@
   function notifyMe() {
     const phone = document.getElementById('cta-notify-phone').value.trim();
     if (!phone || phone.length < 10) { showToast('Please enter a valid phone number'); return; }
-    // Save to notifications list so admin can see it
+    // Also save locally so admin panel can see it
     try {
       const stored = JSON.parse(localStorage.getItem('flyingMangoesNotifications') || '[]');
       stored.push({ product: 'Season update', phone, name: '', timestamp: new Date().toISOString() });
       localStorage.setItem('flyingMangoesNotifications', JSON.stringify(stored));
     } catch(e) {}
     document.getElementById('cta-notify-phone').value = '';
-    showToast("🥭 Added! We'll WhatsApp you shortly.");
+    // Open WhatsApp directly to owner with customer's number pre-filled
+    const msg = encodeURIComponent(
+      '🥭 *Flying Mangoes — Notify Me Request*\n\n' +
+      'A customer wants to be notified about this season\'s harvest.\n\n' +
+      '*Customer Phone:* ' + phone + '\n\n' +
+      'Please add them to your WhatsApp list and send the order link when ready!'
+    );
+    window.open('https://wa.me/919986988855?text=' + msg, '_blank');
+    showToast("🥭 Opening WhatsApp — we'll keep you posted!");
   }
 
   function showToast(msg) {
